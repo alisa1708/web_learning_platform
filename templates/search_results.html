@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Поиск пользователей{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>🔍 Результаты поиска: "{{ query }}"</h1>
+    
+    {% if users %}
+        <ul class="list-group mt-4">
+            {% for user in users %}
+            <li class="list-group-item d-flex align-items-center justify-content-between">
+                <div class="friend-info">
+                    {% if user['avatar'] %}
+                        <img src="{{ url_for('static', filename='uploads/' + user['avatar']) }}" class="rounded-circle" width="40" height="40">
+                    {% else %}
+                        <div class="avatar-circle">{{ user['username'][0]|upper }}</div>
+                    {% endif %}
+                    <span class="ms-2">{{ user['username'] }}</span>
+                </div>
+                <div class="friend-actions">
+                    <form action="{{ url_for('friends') }}" method="POST">
+                        <input type="hidden" name="friend_id" value="{{ user['id'] }}">
+                        <button type="submit" class="btn btn-sm btn-primary">➕ Добавить в друзья</button>
+                    </form>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-muted mt-4">Никого не найдено по запросу "{{ query }}".</p>
+        <a href="{{ url_for('friends') }}" class="btn btn-secondary mt-3">← Назад к друзьям</a>
+    {% endif %}
+</div>
+
+<style>
+    .friend-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .avatar-circle {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, #6366F1, #8B5CF6);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+    }
+    
+    .friend-actions .btn {
+        padding: 8px 12px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 13px;
+        transition: all 0.3s;
+    }
+    
+    .btn-primary {
+        background: #6366F1;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+    
+    body.dark-theme .list-group-item {
+        background: #1E1E32;
+        border-color: #333355;
+        color: #E8E8F0;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,746 @@
+{% extends "base.html" %}
+
+{% block title %}{{ discussion['title'] }}{% endblock %}
+
+{% block content %}
+<div class="group-chat-page" data-theme="{{ discussion['theme'] if discussion['theme'] else 'classic' }}">
+    
+    <div class="back-nav">
+        <a href="{{ url_for('discussions') }}" class="back-pill">
+            <span class="back-icon">←</span>
+            <span class="back-text">Все обсуждения</span>
+        </a>
+    </div>
+
+    <div class="chat-container theme-{{ discussion['theme'] if discussion['theme'] else 'classic' }}">
+        <div class="chat-header">
+            <div class="chat-title">
+                <h1>{{ discussion['title'] }}</h1>
+                <span class="chat-meta">Создал: {{ discussion['creator_name'] }}</span>
+            </div>
+            <!-- Кнопка открытия панели чата (нейтральная шестеренка) -->
+            <button class="chat-panel-toggle" onclick="toggleChatSidebar(event)">⚙️</button>
+        </div>
+
+        <div class="chat-layout">
+            <div class="chat-window" id="chatWindow">
+                {% for message in messages %}
+                    {% if message['user_id'] == user.id %}
+                    <div class="message mine">
+                        <div class="message-content">{{ message['content'] }}</div>
+                        <div class="message-meta">{{ message['username'] }}</div>
+                    </div>
+                    {% else %}
+                    <div class="message theirs">
+                        <div class="message-avatar">
+                            {% if message['avatar'] %}
+                                <img src="{{ url_for('static', filename='uploads/' + message['avatar']) }}" alt="Аватар">
+                            {% else %}
+                                <span>{{ message['username'][0]|upper }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="message-wrapper">
+                            <div class="message-content">{{ message['content'] }}</div>
+                            <div class="message-meta">{{ message['username'] }}</div>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <div class="chat-sidebar" id="chatSidebar">
+                <div class="sidebar-section">
+                    <h3>⚙️ Управление</h3>
+                    
+                    <button class="btn-action" onclick="toggleInviteForm()">
+                        ➕ Добавить участника
+                    </button>
+                    
+                    <div class="invite-form" id="inviteForm" style="display: none;">
+                        <form action="{{ url_for('add_discussion_member_route', discussion_id=discussion['id']) }}" method="POST">
+                            <select name="user_id" required>
+                                <option value="">Выберите пользователя...</option>
+                                {% for user in all_users %}
+                                    {% if user.id != discussion['creator_id'] %}
+                                        <option value="{{ user.id }}">{{ user.username }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                            <button type="submit" class="btn-submit">Добавить</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>👥 Участники</h3>
+                    <ul class="members-list">
+                        {% for member in members %}
+                        <li class="member-item">
+                            <a href="{{ url_for('view_user_profile', user_id=member['id']) }}" class="member-link">
+                                <div class="member-avatar">
+                                    {% if member['avatar'] %}
+                                        <img src="{{ url_for('static', filename='uploads/' + member['avatar']) }}" alt="Аватар">
+                                    {% else %}
+                                        <span>{{ member['username'][0]|upper }}</span>
+                                    {% endif %}
+                                </div>
+                                <span class="member-name">{{ member['username'] }}</span>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>🎨 Тема чата</h3>
+                    <div class="theme-selector">
+                        <button class="theme-btn classic" onclick="changeTheme('classic')">Классическая</button>
+                        <button class="theme-btn gaming" onclick="changeTheme('gaming')">Геймерская</button>
+                        <button class="theme-btn cute" onclick="changeTheme('cute')">Милая</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Форма отправки -->
+        <form action="{{ url_for('send_discussion_message_route', discussion_id=discussion['id']) }}" method="POST" class="chat-form" id="chatForm">
+            <input type="text" name="content" placeholder="Введите сообщение..." required>
+            <button type="submit" class="btn-send">Отправить ➤</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function toggleInviteForm() {
+        const form = document.getElementById('inviteForm');
+        form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function toggleChatSidebar(event) {
+        event.stopPropagation();
+        const sidebar = document.getElementById('chatSidebar');
+        sidebar.classList.toggle('open');
+    }
+
+    function changeTheme(theme) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = "{{ url_for('change_discussion_theme_route', discussion_id=discussion['id']) }}";
+        
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'theme';
+        input.value = theme;
+        
+        form.appendChild(input);
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const chatWindow = document.getElementById('chatWindow');
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+    });
+
+    function sendCuteHearts() {
+        const chatForm = document.getElementById('chatForm');
+        const heart = document.createElement('div');
+        heart.className = 'cute-heart';
+        heart.innerHTML = '❤️';
+        heart.style.left = Math.random() * 80 + '%';
+        
+        chatForm.appendChild(heart);
+        
+        setTimeout(() => {
+            heart.remove();
+        }, 1000);
+    }
+
+    function sendGamingFlash() {
+        const chatForm = document.getElementById('chatForm');
+        chatForm.classList.add('gaming-flash');
+        setTimeout(() => {
+            chatForm.classList.remove('gaming-flash');
+        }, 500);
+    }
+
+    const form = document.getElementById('chatForm');
+    form.addEventListener('submit', function(e) {
+        const theme = document.querySelector('.chat-container').className;
+        
+        if (theme.includes('theme-cute')) {
+            sendCuteHearts();
+        }
+        
+        if (theme.includes('theme-gaming')) {
+            sendGamingFlash();
+        }
+    });
+</script>
+
+<style>
+    :root {
+        --accent: #6366F1;
+        --accent-hover: #4F46E5;
+        --bg-page: #F9FAFB;
+        --bg-card: #FFFFFF;
+        --bg-chat: #F3F4F6;
+        --text-main: #111827;
+        --text-muted: #6B7280;
+        --border: #E5E7EB;
+    }
+
+    body.dark-theme {
+        --bg-page: #111827;
+        --bg-card: #1E1E32;
+        --bg-chat: #111827;
+        --text-main: #E8E8F0;
+        --text-muted: #A0A0B8;
+        --border: #333355;
+    }
+
+    .back-nav {
+        margin-bottom: 20px;
+    }
+
+    .back-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 8px 16px;
+        font-weight: 600;
+        font-size: 13px;
+        color: var(--text-main);
+        transition: all 0.3s;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+
+    .back-pill:hover {
+        background: var(--bg-chat);
+        border-color: var(--text-muted);
+        transform: translateY(-2px);
+        color: var(--text-main);
+    }
+
+    .group-chat-page {
+        max-width: 1100px;
+        margin: 50px auto;
+        padding: 0 20px;
+        background: var(--bg-page);
+        border-radius: 24px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        position: relative;
+    }
+
+    .chat-container {
+        background: var(--bg-card);
+        border-radius: 24px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        position: relative;
+        border: 1px solid var(--border);
+        margin-top: 40px;
+    }
+
+    .chat-header {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding: 20px;
+        border-bottom: 1px solid var(--border);
+        position: relative;
+    }
+
+    .chat-title {
+        flex: 1;
+    }
+
+    .chat-title h1 {
+        font-size: 20px;
+        color: var(--text-main);
+        margin: 0;
+    }
+
+    .chat-meta {
+        font-size: 13px;
+        color: var(--text-muted);
+    }
+
+    .chat-panel-toggle {
+        background: transparent;
+        color: var(--text-muted);
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 20px;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .chat-panel-toggle:hover {
+        background: var(--bg-chat);
+        color: var(--text-main);
+        transform: rotate(90deg);
+    }
+
+    .chat-layout {
+        display: flex;
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .chat-window {
+        flex: 1;
+        min-height: 500px;
+        max-height: 600px;
+        overflow-y: auto;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        background: var(--bg-chat);
+        border-radius: 16px;
+    }
+
+    .chat-sidebar {
+        width: 300px;
+        flex-shrink: 0;
+        background: var(--bg-card);
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        max-height: 600px;
+        overflow-y: auto;
+        position: absolute;
+        right: 20px;
+        top: 70px;
+        z-index: 100;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateX(20px);
+        transition: all 0.5s ease;
+    }
+
+    .chat-sidebar.open {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(0);
+    }
+
+    @media (max-width: 768px) {
+        .chat-sidebar {
+            position: fixed;
+            right: 0;
+            top: 0;
+            height: 100%;
+            z-index: 1000;
+            transform: translateX(100%);
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.2);
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .chat-sidebar.open {
+            transform: translateX(0);
+        }
+
+        .back-pill {
+            position: static;
+            margin-bottom: 20px;
+        }
+    }
+
+    .sidebar-section {
+        margin-bottom: 20px;
+    }
+
+    .sidebar-section h3 {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--text-main);
+        margin: 0 0 10px 0;
+    }
+
+    .btn-action {
+        background: rgba(99, 102, 241, 0.1);
+        color: var(--accent);
+        border: 1px solid rgba(99, 102, 241, 0.3);
+        padding: 10px 14px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 13px;
+        cursor: pointer;
+        width: 100%;
+        transition: all 0.3s;
+    }
+
+    .btn-action:hover {
+        background: rgba(99, 102, 241, 0.2);
+        border-color: var(--accent);
+        transform: translateY(-2px);
+    }
+
+    .invite-form {
+        margin-top: 10px;
+    }
+
+    .invite-form select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        margin-bottom: 8px;
+        font-size: 13px;
+        background: var(--bg-chat);
+        color: var(--text-main);
+    }
+
+    .btn-submit {
+        background: var(--accent);
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        width: 100%;
+    }
+
+    .members-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .member-item {
+        margin-bottom: 10px;
+    }
+
+    .member-link {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+        padding: 8px;
+        border-radius: 10px;
+        transition: all 0.3s;
+    }
+
+    .member-link:hover {
+        background: var(--bg-chat);
+    }
+
+    .member-avatar {
+        width: 32px;
+        height: 32px;
+        background: linear-gradient(135deg, #6366F1, #8B5CF6);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: bold;
+        overflow: hidden;
+    }
+
+    .member-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .member-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-main);
+    }
+
+    .theme-selector {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .theme-btn {
+        padding: 10px 14px;
+        border-radius: 10px;
+        font-weight: 400; /* Тонкий шрифт */
+        font-size: 13px;
+        letter-spacing: 0.5px;
+        cursor: pointer;
+        border: 2px solid transparent;
+        background: var(--bg-chat);
+        color: var(--text-main);
+        transition: all 0.3s;
+    }
+
+    .theme-btn:hover {
+        transform: translateY(-2px);
+    }
+
+    .theme-btn.classic.active {
+        border-color: #6366F1;
+        background: rgba(99, 102, 241, 0.1);
+        color: #6366F1;
+    }
+
+    .theme-btn.gaming.active {
+        border-color: #00FF00;
+        background: rgba(0, 255, 0, 0.1);
+        color: #00FF00;
+        box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+    }
+
+    .theme-btn.cute.active {
+        border-color: #FF69B4;
+        background: rgba(255, 105, 180, 0.1);
+        color: #FF69B4;
+        box-shadow: 0 0 15px rgba(255, 105, 180, 0.3);
+    }
+
+    /* АНИМАЦИИ */
+
+    .chat-container.theme-classic .chat-window {
+        background: var(--bg-chat);
+    }
+
+    .chat-container.theme-classic .message-content {
+        background: var(--bg-card);
+        color: var(--text-main);
+    }
+
+    .chat-container.theme-classic .message.mine .message-content {
+        background: #6366F1;
+        color: white;
+    }
+
+    .chat-container.theme-gaming {
+        border-color: #00FF00;
+        box-shadow: 0 0 30px rgba(0, 255, 0, 0.1);
+    }
+
+    .chat-container.theme-gaming .chat-window {
+        background: rgba(0, 255, 0, 0.03);
+    }
+
+    .chat-container.theme-gaming .chat-header {
+        border-bottom-color: rgba(0, 255, 0, 0.2);
+    }
+
+    .chat-container.theme-gaming .message-content {
+        background: rgba(0, 255, 0, 0.08);
+        color: var(--text-main);
+        border: 1px solid rgba(0, 255, 0, 0.2);
+    }
+
+    .chat-container.theme-gaming .message.mine .message-content {
+        background: #00FF00;
+        color: #0D0D0D;
+        border-color: #00FF00;
+        box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+    }
+
+    .chat-container.theme-gaming .chat-form {
+        border-top-color: rgba(0, 255, 0, 0.2);
+    }
+
+    .chat-container.theme-gaming .chat-form input {
+        border-color: rgba(0, 255, 0, 0.3);
+    }
+
+    .chat-container.theme-gaming .btn-send {
+        background: #00FF00;
+        color: #0D0D0D;
+        box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+    }
+
+    .chat-container.theme-gaming .chat-form.gaming-flash {
+        animation: gamingFlash 0.5s ease;
+    }
+
+    @keyframes gamingFlash {
+        0% { background-color: rgba(0, 255, 0, 0.1); }
+        50% { background-color: rgba(0, 255, 0, 0.3); }
+        100% { background-color: var(--bg-card); }
+    }
+
+    .chat-container.theme-cute {
+        border-color: #FF69B4;
+        box-shadow: 0 0 30px rgba(255, 105, 180, 0.1);
+    }
+
+    .chat-container.theme-cute .chat-window {
+        background: rgba(255, 105, 180, 0.03);
+    }
+
+    .chat-container.theme-cute .chat-header {
+        border-bottom-color: rgba(255, 105, 180, 0.2);
+    }
+
+    .chat-container.theme-cute .message-content {
+        background: rgba(255, 105, 180, 0.08);
+        color: var(--text-main);
+        border: 1px solid rgba(255, 105, 180, 0.2);
+    }
+
+    .chat-container.theme-cute .message.mine .message-content {
+        background: #FF69B4;
+        color: white;
+        border-color: #FF69B4;
+        box-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
+    }
+
+    .chat-container.theme-cute .chat-form {
+        border-top-color: rgba(255, 105, 180, 0.2);
+    }
+
+    .chat-container.theme-cute .chat-form input {
+        border-color: rgba(255, 105, 180, 0.3);
+    }
+
+    .chat-container.theme-cute .btn-send {
+        background: #FF69B4;
+        color: white;
+        box-shadow: 0 0 15px rgba(255, 105, 180, 0.3);
+    }
+
+    .chat-container.theme-cute .cute-heart {
+        position: absolute;
+        bottom: 20px;
+        font-size: 24px;
+        animation: heartFly 1s ease forwards;
+        z-index: 1000;
+        pointer-events: none;
+    }
+
+    @keyframes heartFly {
+        0% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        100% {
+            opacity: 0;
+            transform: translateY(-50px) scale(1.5);
+        }
+    }
+
+    .message {
+        display: flex;
+        gap: 10px;
+        max-width: 80%;
+        animation: messageIn 0.3s ease;
+    }
+
+    .message.mine {
+        align-self: flex-end;
+    }
+
+    .message.theirs {
+        align-self: flex-start;
+    }
+
+    .message-avatar {
+        width: 36px;
+        height: 36px;
+        background: linear-gradient(135deg, #6366F1, #8B5CF6);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        font-weight: bold;
+        overflow: hidden;
+        flex-shrink: 0;
+    }
+
+    .message-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .message-content {
+        background: var(--bg-card);
+        border-radius: 16px;
+        padding: 14px;
+        font-size: 14px;
+        color: var(--text-main);
+        border: 1px solid var(--border);
+    }
+
+    .message.mine .message-content {
+        border-color: transparent;
+    }
+
+    .message-meta {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-top: 4px;
+        margin-left: 4px;
+    }
+
+    .message.mine .message-meta {
+        text-align: right;
+        margin-right: 4px;
+    }
+
+    @keyframes messageIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .chat-form {
+        padding: 16px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        gap: 10px;
+        background: var(--bg-card);
+    }
+
+    .chat-form input {
+        flex: 1;
+        padding: 14px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        font-size: 14px;
+        background: var(--bg-chat);
+        color: var(--text-main);
+    }
+
+    .chat-form input:focus {
+        outline: none;
+        border-color: var(--accent);
+        background: var(--bg-card);
+    }
+
+    .btn-send {
+        background: var(--accent);
+        color: white;
+        border: none;
+        padding: 14px 20px;
+        border-radius: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .btn-send:hover {
+        transform: translateY(-2px);
+        opacity: 0.95;
+    }
+</style>
+{% endblock %}

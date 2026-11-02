@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Веб-обучение{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-left">
+                <button class="menu-toggle" onclick="toggleSidebar()" title="Меню">☰</button>
+                <a href="{{ url_for('about') }}" class="nav-brand">📚 Веб-<span>обучение</span></a>
+            </div>
+            <div class="nav-links">
+                {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('profile') }}">Мои задания</a>
+                    <a href="{{ url_for('about') }}">О платформе</a>
+                    <div class="settings-wrapper">
+                        <button class="settings-btn" onclick="toggleSettings()" title="Настройки">⚙️</button>
+                        <div class="settings-dropdown" id="settingsDropdown">
+                            <div class="settings-header">
+                                <span class="settings-title">⚙️ Настройки</span>
+                            </div>
+                            <a href="{{ url_for('profile_info') }}" class="menu-profile-pill">
+                                <span class="avatar-small">{{ current_user.username[0]|upper }}</span>
+                                <span class="username-text">{{ current_user.username }}</span>
+                                <span class="arrow">→</span>
+                            </a>
+                            <div class="settings-item">
+                                <span class="settings-label">Тема</span>
+                                <div class="theme-toggle">
+                                    <button class="theme-btn active" data-theme="light" onclick="setTheme('light')"> Светлая</button>
+                                    <button class="theme-btn" data-theme="dark" onclick="setTheme('dark')"> Тёмная</button>
+                                </div>
+                            </div>
+                            <div class="settings-divider"></div>
+                            <a href="{{ url_for('logout') }}" class="settings-logout"> Выйти из системы</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="{{ url_for('about') }}">О платформе</a>
+                    <a href="{{ url_for('login') }}">Вход</a>
+                    <a href="{{ url_for('register') }}">Регистрация</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Выдвижная боковая панель -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <span class="sidebar-logo">📚 Веб-обучение</span>
+            <button class="close-sidebar" onclick="closeSidebar()">✕</button>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="{{ url_for('profile') }}" class="sidebar-link">
+                <span class="link-icon">🏠</span>
+                <span class="link-text">Главная</span>
+            </a>
+            <a href="{{ url_for('discussions') }}" class="sidebar-link">
+                <span class="link-icon">💬</span>
+                <span class="link-text">Обсуждения</span>
+            </a>
+            <a href="{{ url_for('friends') }}" class="sidebar-link">
+                <span class="link-icon">👥</span>
+                <span class="link-text">Друзья</span>
+            </a>
+            <a href="{{ url_for('messages') }}" class="sidebar-link">
+                <span class="link-icon">✉️</span>
+                <span class="link-text">Личные сообщения</span>
+            </a>
+            <a href="{{ url_for('ranking') }}" class="sidebar-link">
+                <span class="link-icon">🏆</span>
+                <span class="link-text">Рейтинг</span>
+            </a>
+            <a href="{{ url_for('help_page') }}" class="sidebar-link">
+                <span class="link-icon">❓</span>
+                <span class="link-text">Помощь</span>
+            </a>
+        </nav>
+    </aside>
+
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/loader.min.js"></script>
+
+    <script>
+        function setTheme(theme) {
+            localStorage.setItem('theme', theme);
+            if (theme === 'dark') {
+                document.body.classList.add('dark-theme');
+            } else {
+                document.body.classList.remove('dark-theme');
+            }
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.theme === theme) btn.classList.add('active');
+            });
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            setTheme(savedTheme);
+        }
+
+        function toggleSettings() {
+            const dropdown = document.getElementById('settingsDropdown');
+            const btn = document.querySelector('.settings-btn');
+            dropdown.classList.toggle('open');
+            if (dropdown.classList.contains('open')) {
+                btn.classList.add('spinning');
+                setTimeout(() => btn.classList.remove('spinning'), 600);
+            }
+        }
+
+        document.addEventListener('click', function(event) {
+            const wrapper = document.querySelector('.settings-wrapper');
+            if (wrapper && !wrapper.contains(event.target)) {
+                const dropdown = document.getElementById('settingsDropdown');
+                if (dropdown) dropdown.classList.remove('open');
+            }
+        });
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('sidebarOverlay').classList.toggle('active');
+        }
+
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('sidebarOverlay').classList.remove('active');
+        }
+
+        document.addEventListener('DOMContentLoaded', loadTheme);
+    </script>
+
+    <style>
+        .nav-left { display: flex; align-items: center; gap: 10px; }
+        .menu-toggle {
+            background: none; border: none; font-size: 26px; cursor: pointer;
+            color: #6B7280; padding: 4px 8px; border-radius: 8px; transition: all 0.3s;
+        }
+        .menu-toggle:hover { background: #F3F4F6; color: #111827; }
+        body.dark-theme .menu-toggle { color: #A0A0B8; }
+        body.dark-theme .menu-toggle:hover { background: #2A2A42; color: #E8E8F0; }
+
+        .sidebar-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0, 0, 0, 0.5); z-index: 999;
+        }
+        .sidebar-overlay.active { display: block; }
+        .sidebar {
+            position: fixed; top: 0; left: -320px; width: 320px; height: 100%;
+            background: white; box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000; transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex; flex-direction: column;
+        }
+        .sidebar.open { left: 0; }
+        body.dark-theme .sidebar { background: #1E1E32; box-shadow: 2px 0 15px rgba(0,0,0,0.5); }
+        .sidebar-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 20px; border-bottom: 1px solid #E5E7EB;
+        }
+        body.dark-theme .sidebar-header { border-bottom-color: #333355; }
+        .sidebar-logo { font-size: 18px; font-weight: 700; color: #111827; }
+        body.dark-theme .sidebar-logo { color: #E8E8F0; }
+        .close-sidebar {
+            background: none; border: none; font-size: 20px; cursor: pointer; color: #6B7280;
+        }
+        .close-sidebar:hover { color: #111827; }
+        body.dark-theme .close-sidebar:hover { color: #E8E8F0; }
+        .sidebar-nav {
+            padding: 20px; display: flex; flex-direction: column; gap: 10px;
+        }
+        .sidebar-link {
+            display: flex; align-items: center; gap: 14px; text-decoration: none;
+            padding: 12px 16px; border-radius: 12px; color: #374151;
+            font-weight: 500; font-size: 15px; transition: all 0.3s;
+        }
+        .sidebar-link:hover { background: #F3F4F6; color: #6366F1; }
+        body.dark-theme .sidebar-link { color: #A0A0B8; }
+        body.dark-theme .sidebar-link:hover { background: #2A2A42; color: #818CF8; }
+        .link-icon { font-size: 20px; }
+
+        .settings-wrapper { position: relative; display: inline-block; }
+        .settings-btn {
+            background: none; border: none; font-size: 22px; cursor: pointer;
+            padding: 4px 8px; border-radius: 8px; transition: all 0.3s ease;
+            color: #6B7280; line-height: 1;
+        }
+        .settings-btn:hover { background: #F3F4F6; color: #111827; }
+        body.dark-theme .settings-btn { color: #A0A0B8; }
+        body.dark-theme .settings-btn:hover { background: #2A2A42; color: #E8E8F0; }
+
+        .settings-dropdown {
+            position: absolute; top: calc(100% + 12px); right: 0;
+            min-width: 340px; max-width: 360px; background: white;
+            border-radius: 16px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            border: 1px solid #E5E7EB; padding: 20px 24px;
+            opacity: 0; visibility: hidden;
+            transform: translateY(-10px) scale(0.95);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000; transform-origin: top right;
+        }
+        .settings-dropdown.open {
+            opacity: 1; visibility: visible; transform: translateY(0) scale(1);
+        }
+        body.dark-theme .settings-dropdown {
+            background: #1E1E32; border-color: #333355;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+        .settings-dropdown .settings-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid #F3F4F6;
+        }
+        body.dark-theme .settings-dropdown .settings-header { border-bottom-color: #333355; }
+        .settings-dropdown .settings-title { font-size: 16px; font-weight: 700; color: #111827; }
+        body.dark-theme .settings-dropdown .settings-title { color: #E8E8F0; }
+
+        .menu-profile-pill {
+            display: flex; align-items: center; gap: 12px; text-decoration: none;
+            padding: 12px 14px; border-radius: 12px; background: #F3F4F6;
+            color: #111827; transition: all 0.3s ease; margin-bottom: 14px;
+        }
+        .menu-profile-pill:hover { background: #E5E7EB; }
+        body.dark-theme .menu-profile-pill { background: #2A2A42; color: #E8E8F0; }
+        body.dark-theme .menu-profile-pill:hover { background: #333355; }
+        .avatar-small {
+            width: 32px; height: 32px;
+            background: linear-gradient(135deg, #6366F1, #4834d4);
+            color: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; font-weight: bold; flex-shrink: 0;
+        }
+        .username-text { font-weight: 600; font-size: 14px; flex-grow: 1; }
+        .arrow { color: #9CA3AF; font-size: 16px; }
+
+        .settings-dropdown .settings-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 0; gap: 30px;
+        }
+        .settings-dropdown .settings-label {
+            font-size: 14px; font-weight: 500; color: #374151;
+            min-width: 50px; flex-shrink: 0;
+        }
+        body.dark-theme .settings-dropdown .settings-label { color: #A0A0B8; }
+        .settings-dropdown .theme-toggle { display: flex; gap: 8px; flex-shrink: 0; }
+        .settings-dropdown .theme-btn {
+            padding: 6px 16px; border: 2px solid #E5E7EB; border-radius: 8px;
+            background: transparent; cursor: pointer; font-size: 13px;
+            font-weight: 500; color: #6B7280; transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif; min-width: 82px;
+            text-align: center; white-space: nowrap;
+        }
+        .settings-dropdown .theme-btn:hover { border-color: #9CA3AF; background: #F9FAFB; }
+        .settings-dropdown .theme-btn.active {
+            border-color: #6366F1; background: #EEF2FF; color: #6366F1;
+        }
+        body.dark-theme .settings-dropdown .theme-btn { border-color: #333355; color: #A0A0B8; }
+        body.dark-theme .settings-dropdown .theme-btn:hover { border-color: #555577; background: #2A2A42; }
+        body.dark-theme .settings-dropdown .theme-btn.active {
+            border-color: #818CF8; background: rgba(99, 102, 241, 0.15); color: #818CF8;
+        }
+        .settings-dropdown .settings-divider { height: 1px; background: #F3F4F6; margin: 10px 0; }
+        body.dark-theme .settings-dropdown .settings-divider { background: #333355; }
+        .settings-dropdown .settings-logout {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 14px; border-radius: 10px; color: #EF4444;
+            text-decoration: none; font-weight: 600; font-size: 14px;
+            transition: all 0.3s ease; margin-top: 4px;
+        }
+        .settings-dropdown .settings-logout:hover { background: #FEF2F2; }
+        body.dark-theme .settings-dropdown .settings-logout:hover {
+            background: rgba(239, 68, 68, 0.15);
+        }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .settings-btn.spinning { animation: spin 0.6s ease; }
+    </style>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

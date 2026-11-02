@@ -1,0 +1,15 @@
+# Игнорируем системные папки Windows и кэши приложений
+AppData/
+Discord/
+Figma/
+GitHubDesktop/
+
+# Игнорируем виртуальное окружение и кэш Python
+venv/
+__pycache__/
+*.pyc
+
+# Прочий мусор
+.env
+*.sqlite3
+.DS_Store

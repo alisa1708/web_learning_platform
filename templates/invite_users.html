@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Пригласить участника{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top: 50px;">
+    <h1>🔍 Поиск пользователей</h1>
+    
+    <form action="{{ url_for('search_discussion_users', discussion_id=discussion_id) }}" method="GET" style="margin-top: 20px;">
+        <div class="input-group">
+            <input type="text" name="q" placeholder="Введите имя пользователя..." required>
+            <button type="submit" class="btn btn-primary">Найти</button>
+        </div>
+    </form>
+    
+    {% if users %}
+        <ul class="list-group mt-4">
+            {% for user in users %}
+            <li class="list-group-item d-flex align-items-center justify-content-between">
+                <div class="friend-info">
+                    {% if user['avatar'] %}
+                        <img src="{{ url_for('static', filename='uploads/' + user['avatar']) }}" class="rounded-circle" width="40" height="40">
+                    {% else %}
+                        <div class="avatar-circle">{{ user['username'][0]|upper }}</div>
+                    {% endif %}
+                    <span class="ms-2">{{ user['username'] }}</span>
+                </div>
+                <div class="friend-actions">
+                    <form action="{{ url_for('add_discussion_member_route', discussion_id=discussion_id) }}" method="POST">
+                        <input type="hidden" name="user_id" value="{{ user['id'] }}">
+                        <button type="submit" class="btn btn-sm btn-primary">➕ Добавить</button>
+                    </form>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-muted mt-4">Никого не найдено. Попробуйте другое имя.</p>
+    {% endif %}
+</div>
+
+<style>
+    .input-group {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    
+    .input-group input {
+        flex: 1;
+        padding: 12px;
+        border: 1px solid #E5E7EB;
+        border-radius: 10px;
+    }
+    
+    .btn-primary {
+        background: #6366F1;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+    
+    .avatar-circle {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, #6366F1, #8B5CF6);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+    }
+    
+    body.dark-theme .list-group-item {
+        background: #1E1E32;
+        border-color: #333355;
+        color: #E8E8F0;
+    }
+    
+    body.dark-theme .input-group input {
+        background: #111827;
+        border-color: #333355;
+        color: #F9FAFB;
+    }
+</style>
+{% endblock %}

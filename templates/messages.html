@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% block title %}Личные сообщения{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 750px; margin-top: 80px;">
+    <h1 style="margin-bottom: 50px;"> Личные сообщения</h1>
+    
+    <div class="chats-list">
+        {% if chats %}
+            <ul class="chat-list">
+                {% for chat in chats %}
+                <li class="chat-item {% if chat['unread_count'] > 0 %}unread{% endif %}">
+                    <a href="{{ url_for('chat_with_user', user_id=chat['other_user_id']) }}" class="chat-link">
+                        <div class="chat-avatar" onclick="event.stopPropagation();">
+                            {% if chat['other_avatar'] %}
+                                <img src="{{ url_for('static', filename='uploads/' + chat['other_avatar']) }}" alt="Аватар">
+                            {% else %}
+                                <span>{{ chat['other_username'][0]|upper }}</span>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="chat-info">
+                            <span class="chat-name">{{ chat['other_username'] }}</span>
+                            <span class="chat-last-message">{{ chat['last_message'] }}</span>
+                        </div>
+                        
+                        <div class="chat-meta">
+                            <span class="chat-time">{{ chat['last_message_time'] }}</span>
+                            {% if chat['unread_count'] > 0 %}
+                                <span class="unread-badge">{{ chat['unread_count'] }}</span>
+                            {% endif %}
+                        </div>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="no-chats">У вас пока нет сообщений. Добавьте друзей и напишите им!</p>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .chat-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .chat-item {
+        margin-bottom: 16px;
+        border-radius: 16px;
+        transition: all 0.3s ease;
+    }
+    
+    .chat-item.unread {
+        background: #EEF2FF;
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
+    }
+    
+    .chat-link {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        text-decoration: none;
+        padding: 16px 20px;
+    }
+    
+    .chat-avatar {
+        width: 56px;
+        height: 56px;
+        background: linear-gradient(135deg, #6366F1, #8B5CF6);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        font-weight: bold;
+        flex-shrink: 0;
+        overflow: hidden;
+        text-decoration: none;
+        cursor: pointer;
+    }
+    
+    .chat-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .chat-info {
+        flex: 1;
+        margin-left: 16px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+    
+    .chat-name {
+        font-weight: 600;
+        font-size: 16px;
+        color: #111827;
+    }
+    
+    .chat-last-message {
+        font-size: 14px;
+        color: #6B7280;
+        margin-top: 4px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 300px;
+    }
+    
+    .chat-meta {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
+    }
+    
+    .chat-time {
+        font-size: 12px;
+        color: #6B7280;
+    }
+    
+    .unread-badge {
+        background: #6366F1;
+        color: white;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 4px 8px;
+        border-radius: 12px;
+    }
+    
+    .no-chats {
+        color: #6B7280;
+        text-align: center;
+        padding: 40px;
+    }
+    
+    body.dark-theme .chat-item.unread {
+        background: rgba(99, 102, 241, 0.15);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+    }
+    
+    body.dark-theme .chat-name {
+        color: #E8E8F0;
+    }
+    
+    body.dark-theme .chat-last-message {
+        color: #A0A0B8;
+    }
+    
+    body.dark-theme .chat-time {
+        color: #A0A0B8;
+    }
+    
+    body.dark-theme .no-chats {
+        color: #A0A0B8;
+    }
+</style>
+{% endblock %}

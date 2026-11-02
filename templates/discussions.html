@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+
+{% block title %}Обсуждения{% endblock %}
+
+{% block content %}
+<div class="discussions-page">
+    <!-- Заголовок и кнопка создания -->
+    <div class="page-header">
+        <div class="header-left">
+            <h1>💬 Обсуждения</h1>
+            <p class="subtitle">Общайтесь с другими учениками</p>
+        </div>
+        <button class="btn-create" onclick="toggleCreateForm()">
+            ➕ Создать обсуждение
+        </button>
+    </div>
+
+    <!-- Форма создания (скрыта по умолчанию) -->
+    <div class="create-form" id="createForm" style="display: none;">
+        <form action="{{ url_for('discussions') }}" method="POST">
+            <input type="text" name="title" placeholder="Придумайте название обсуждения..." required>
+            <button type="submit" class="btn-submit">Создать</button>
+        </form>
+    </div>
+
+    <!-- Список обсуждений -->
+    <div class="discussions-list">
+        {% for discussion in discussions %}
+        <a href="{{ url_for('discussion_chat', discussion_id=discussion['id']) }}" class="discussion-card">
+            <div class="discussion-icon">💬</div>
+            <div class="discussion-info">
+                <span class="discussion-title">{{ discussion['title'] }}</span>
+                <span class="discussion-meta">
+                    Создал: {{ discussion['creator_name'] }} • {{ discussion['messages_count'] }} сообщений
+                </span>
+            </div>
+            <div class="discussion-arrow">→</div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    function toggleCreateForm() {
+        const form = document.getElementById('createForm');
+        form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    }
+</script>
+
+<style>
+    .discussions-page {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 0 20px;
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .header-left h1 {
+        font-size: 32px;
+        font-weight: 800;
+        color: #111827;
+        margin: 0 0 5px 0;
+    }
+
+    .subtitle {
+        color: #6B7280;
+        font-size: 14px;
+        margin: 0;
+    }
+
+    .btn-create {
+        background: linear-gradient(135deg, #6366F1, #8B5CF6);
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .btn-create:hover {
+        transform: translateY(-2px);
+        opacity: 0.95;
+    }
+
+    .create-form {
+        background: white;
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        margin-bottom: 30px;
+        animation: slideDown 0.3s ease;
+    }
+
+    .create-form form {
+        display: flex;
+        gap: 10px;
+    }
+
+    .create-form input {
+        flex: 1;
+        padding: 12px 16px;
+        border: 1px solid #E5E7EB;
+        border-radius: 10px;
+        font-size: 14px;
+        background: #F9FAFB;
+    }
+
+    .create-form input:focus {
+        outline: none;
+        border-color: #6366F1;
+        background: white;
+    }
+
+    .btn-submit {
+        background: #6366F1;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .discussions-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .discussion-card {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        background: white;
+        border-radius: 16px;
+        padding: 18px 20px;
+        text-decoration: none;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+        transition: all 0.3s ease;
+    }
+
+    .discussion-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .discussion-icon {
+        width: 48px;
+        height: 48px;
+        background: #EEF2FF;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        flex-shrink: 0;
+    }
+
+    .discussion-info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .discussion-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #111827;
+    }
+
+    .discussion-meta {
+        font-size: 13px;
+        color: #6B7280;
+        margin-top: 4px;
+    }
+
+    .discussion-arrow {
+        color: #9CA3AF;
+        font-size: 18px;
+    }
+
+    /* Тёмная тема */
+    body.dark-theme .header-left h1 {
+        color: #E8E8F0;
+    }
+
+    body.dark-theme .subtitle {
+        color: #A0A0B8;
+    }
+
+    body.dark-theme .create-form {
+        background: #1E1E32;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    body.dark-theme .create-form input {
+        background: #111827;
+        border-color: #333355;
+        color: #F9FAFB;
+    }
+
+    body.dark-theme .discussion-card {
+        background: #1E1E32;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+    }
+
+    body.dark-theme .discussion-card:hover {
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+    }
+
+    body.dark-theme .discussion-title {
+        color: #E8E8F0;
+    }
+
+    body.dark-theme .discussion-meta {
+        color: #A0A0B8;
+    }
+
+    @keyframes slideDown {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+{% endblock %}

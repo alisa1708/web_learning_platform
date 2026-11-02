@@ -1,0 +1,1091 @@
+{% extends "base.html" %}
+
+{% block title %}Задание {{ task.id }}. {{ task.title }}{% endblock %}
+
+{% block content %}
+<div class="task-page">
+    <a href="{{ url_for('profile') }}" class="back-link">← Назад к заданиям</a>
+
+    <div class="task-header">
+        <div class="task-header-left">
+            <h1>Задание {{ task.id }}. {{ task.title }}</h1>
+            <div class="task-meta">
+                {% set diff = task.difficulty|default('easy') %}
+                <span class="difficulty-badge {{ diff }}">
+                    {% if diff == 'easy' %}🟢 Лёгкая
+                    {% elif diff == 'medium' %}🟡 Средняя
+                    {% else %}🔴 Сложная{% endif %}
+                </span>
+                <span class="meta-item">⭐ {{ task.points|default(10) }} баллов</span>
+                <span class="meta-item">⏱️ 2 сек</span>
+                <span class="meta-item">💾 64 МБ</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="task-description">
+        <div class="description-header">
+            <span class="description-icon">📋</span>
+            <h3>Условие задания</h3>
+        </div>
+        <div class="description-content">
+            {{ task.description }}
+        </div>
+    </div>
+
+    <div class="editor-wrapper">
+
+        <!-- ЛЕВАЯ ПАНЕЛЬ: РЕДАКТОР -->
+        <div class="editor-panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <span class="file-dot"></span>
+                    <span>main.html</span>
+                </div>
+                <div class="panel-actions">
+                    <button class="btn-action btn-copy" onclick="copyCode()" title="Копировать код">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                        </svg>
+                        Копировать
+                    </button>
+                    <button class="btn-action btn-clear" onclick="clearCode()" title="Очистить">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6"/>
+                            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                        </svg>
+                        Очистить
+                    </button>
+                </div>
+            </div>
+
+            <div class="editor-hint" id="editorHint">
+                <div class="hint-content">
+                    <span class="hint-icon">💡</span>
+                    <div>
+                        <div class="hint-title">Начните писать код здесь</div>
+                        <div class="hint-text">Используйте теги HTML, чтобы создать страницу. Когда закончите — нажмите <strong>«Запустить»</strong> или <strong>«Отправить»</strong>.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Редактор кода -->
+            <textarea id="codeEditor" class="code-editor" spellcheck="false" placeholder="<!-- Напишите ваш HTML-код здесь -->">{{ last_code or '' }}</textarea>
+
+            <!-- Кнопки действий -->
+            <div class="editor-actions">
+                <button class="btn btn-run" onclick="runCode()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="5 3 19 12 5 21 5 3"/>
+                    </svg>
+                    Запустить
+                </button>
+                <button class="btn btn-submit" onclick="submitCode()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="22" y1="2" x2="11" y2="13"/>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                    </svg>
+                    Отправить
+                </button>
+                <button class="btn btn-solution" id="solutionBtn" onclick="showSolution()" style="display: none;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                    </svg>
+                    Посмотреть решение
+                </button>
+            </div>
+        </div>
+
+        <div class="result-panel">
+            <div class="panel-header">
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="preview" onclick="switchTab('preview')">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                        Просмотр
+                    </button>
+                    <button class="tab-btn" data-tab="tests" onclick="switchTab('tests')">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 11 12 14 22 4"/>
+                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                        </svg>
+                        Тесты
+                        <span class="tests-count" id="testsCount"></span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="panel-body">
+                <!-- Вкладка: Просмотр -->
+                <div class="tab-content active" id="tab-preview">
+                    <iframe id="previewFrame" class="preview-frame" sandbox="allow-scripts"></iframe>
+                    <div class="preview-placeholder" id="previewPlaceholder">
+                        <div class="placeholder-content">
+                            <div class="placeholder-icon">🖥️</div>
+                            <div class="placeholder-title">Здесь появится результат</div>
+                            <div class="placeholder-text">Нажмите <strong>«Запустить»</strong>, чтобы увидеть вашу страницу</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Вкладка: Тесты -->
+                <div class="tab-content" id="tab-tests">
+                    <div id="testsResult">
+                        <div class="empty-state">
+                            <div class="empty-icon">🧪</div>
+                            <div class="empty-title">Тесты ещё не запущены</div>
+                            <div class="empty-text">Нажмите <strong>«Отправить»</strong>, чтобы проверить решение</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="solutionModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <span class="modal-icon">📖</span>
+                    <span>Пример решения</span>
+                </div>
+                <button class="modal-close" onclick="closeSolution()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-tabs">
+                <button class="modal-tab active" data-mtab="code" onclick="switchModalTab('code')">💻 Код</button>
+                <button class="modal-tab" data-mtab="steps" onclick="switchModalTab('steps')">📝 Пошаговое решение</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-tab-content active" id="modal-tab-code">
+                    <pre id="solutionCode" class="solution-code"></pre>
+                    <button class="btn btn-copy-solution" onclick="copySolution()">
+                        📋 Скопировать код
+                    </button>
+                </div>
+                <div class="modal-tab-content" id="modal-tab-steps">
+                    <div id="solutionSteps" class="solution-steps"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+:root {
+    --primary: #6366F1;
+    --primary-dark: #4F46E5;
+    --primary-light: #EEF2FF;
+    --success: #10B981;
+    --success-dark: #059669;
+    --warning: #F59E0B;
+    --danger: #EF4444;
+    --gray-50: #F9FAFB;
+    --gray-100: #F3F4F6;
+    --gray-200: #E5E7EB;
+    --gray-300: #D1D5DB;
+    --gray-400: #9CA3AF;
+    --gray-500: #6B7280;
+    --gray-600: #4B5563;
+    --gray-700: #374151;
+    --gray-800: #1F2937;
+    --gray-900: #111827;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.1);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+}
+
+.task-page {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--gray-500);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 16px;
+    transition: all 0.2s;
+}
+.back-link:hover { color: var(--primary); }
+
+.task-header { margin-bottom: 20px; }
+.task-header h1 {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--gray-900);
+    margin-bottom: 10px;
+}
+.task-meta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+    font-size: 13px;
+    color: var(--gray-500);
+}
+.difficulty-badge {
+    padding: 3px 12px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 12px;
+}
+.difficulty-badge.easy { background: #D1FAE5; color: #065F46; }
+.difficulty-badge.medium { background: #FEF3C7; color: #92400E; }
+.difficulty-badge.hard { background: #FEE2E2; color: #991B1B; }
+.meta-item {
+    padding: 3px 12px;
+    background: var(--gray-100);
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+.task-description {
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    border-left: 4px solid var(--primary);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+.description-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+.description-icon { font-size: 18px; }
+.description-header h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--gray-900);
+}
+.description-content {
+    color: var(--gray-600);
+    font-size: 14px;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    font-family: -apple-system, 'Segoe UI', sans-serif;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+}
+.description-content strong {
+    color: var(--gray-800);
+    font-weight: 700;
+}
+
+.editor-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+    min-width: 0;
+}
+
+.editor-panel, .result-panel {
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+    background: var(--gray-50);
+    border-bottom: 1px solid var(--gray-200);
+    min-height: 48px;
+    flex-shrink: 0;
+}
+
+.panel-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-700);
+}
+
+.file-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #E34F26;
+}
+
+.panel-actions {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.btn-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    border: 1px solid var(--gray-200);
+    background: white;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--gray-600);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+    white-space: nowrap;
+}
+
+.btn-action:hover {
+    background: var(--gray-100);
+    border-color: var(--gray-300);
+    color: var(--gray-800);
+}
+
+.btn-clear:hover {
+    color: var(--danger);
+    border-color: #FECACA;
+    background: #FEF2F2;
+}
+
+.editor-hint {
+    padding: 12px 16px;
+    background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+    border-bottom: 1px solid #FCD34D;
+    transition: all 0.3s;
+    flex-shrink: 0;
+}
+.editor-hint.hidden { display: none; }
+.hint-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: #78350F;
+}
+.hint-icon { font-size: 18px; flex-shrink: 0; }
+.hint-title { font-weight: 700; margin-bottom: 2px; }
+.hint-text { line-height: 1.5; }
+
+.code-editor {
+    width: 100%;
+    min-height: 420px;
+    max-height: 420px;
+    padding: 16px;
+    border: none;
+    outline: none;
+    background: #1E1E1E;
+    color: #D4D4D4;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.7;
+    resize: none;
+    tab-size: 2;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    display: block;
+}
+.code-editor::placeholder {
+    color: #5A5A5A;
+    font-style: italic;
+}
+.code-editor:focus {
+    box-shadow: inset 0 0 0 2px var(--primary);
+}
+
+.editor-actions {
+    display: flex;
+    gap: 8px;
+    padding: 12px 16px;
+    background: var(--gray-50);
+    border-top: 1px solid var(--gray-200);
+    flex-wrap: wrap;
+    flex-shrink: 0;
+}
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 18px;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+    flex: 1;
+    min-width: 120px;
+}
+.btn-run {
+    background: var(--success);
+    color: white;
+}
+.btn-run:hover {
+    background: var(--success-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+.btn-submit {
+    background: var(--primary);
+    color: white;
+}
+.btn-submit:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+.btn-solution {
+    background: white;
+    color: var(--warning);
+    border: 1.5px solid var(--warning);
+}
+.btn-solution:hover {
+    background: #FFFBEB;
+    transform: translateY(-1px);
+}
+
+.tabs {
+    display: flex;
+    gap: 4px;
+}
+.tab-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--gray-500);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+}
+.tab-btn:hover { background: var(--gray-100); }
+.tab-btn.active {
+    background: white;
+    color: var(--gray-900);
+    box-shadow: var(--shadow);
+}
+.tests-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 9px;
+    background: var(--gray-200);
+    color: var(--gray-600);
+    font-size: 11px;
+    font-weight: 700;
+}
+.tests-count.success { background: var(--success); color: white; }
+.tests-count.failed { background: var(--danger); color: white; }
+
+.panel-body {
+    flex: 1;
+    position: relative;
+    min-height: 420px;
+    overflow: hidden;
+}
+.tab-content {
+    display: none;
+    height: 100%;
+}
+.tab-content.active {
+    display: block;
+}
+
+.preview-frame {
+    width: 100%;
+    height: 100%;
+    min-height: 420px;
+    border: none;
+    background: white;
+    display: block;
+}
+.preview-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--gray-50);
+    color: var(--gray-500);
+}
+.preview-placeholder.hidden { display: none; }
+.placeholder-content { text-align: center; padding: 24px; }
+.placeholder-icon { font-size: 48px; margin-bottom: 12px; opacity: 0.6; }
+.placeholder-title { font-size: 16px; font-weight: 600; color: var(--gray-700); margin-bottom: 4px; }
+.placeholder-text { font-size: 13px; color: var(--gray-500); }
+
+#testsResult {
+    padding: 16px;
+    overflow-y: auto;
+    max-height: 420px;
+}
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+}
+.empty-icon { font-size: 42px; margin-bottom: 12px; opacity: 0.6; }
+.empty-title { font-size: 15px; font-weight: 600; color: var(--gray-700); margin-bottom: 4px; }
+.empty-text { font-size: 13px; color: var(--gray-500); }
+
+.test-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 16px;
+}
+.test-summary.success { background: #ECFDF5; border: 1px solid #A7F3D0; }
+.test-summary.failed { background: #FEF2F2; border: 1px solid #FECACA; }
+.test-summary.warning { background: #FFFBEB; border: 1px solid #FDE68A; }
+.summary-left { display: flex; align-items: center; gap: 10px; }
+.summary-icon { font-size: 24px; }
+.summary-title { font-weight: 700; font-size: 14px; }
+.summary-subtitle { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
+.summary-score {
+    font-size: 20px;
+    font-weight: 800;
+}
+.test-summary.success .summary-score { color: var(--success-dark); }
+.test-summary.failed .summary-score { color: var(--danger); }
+
+.test-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 8px;
+    border: 1px solid var(--gray-200);
+    background: white;
+    transition: all 0.15s;
+}
+.test-item:hover { box-shadow: var(--shadow); }
+.test-item.passed { border-left: 3px solid var(--success); }
+.test-item.failed { border-left: 3px solid var(--danger); }
+.test-icon-wrap {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+}
+.test-item.passed .test-icon-wrap { background: #D1FAE5; color: var(--success-dark); }
+.test-item.failed .test-icon-wrap { background: #FEE2E2; color: var(--danger); }
+.test-content { flex: 1; }
+.test-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: 2px;
+}
+.test-detail {
+    font-size: 12px;
+    color: var(--gray-500);
+    line-height: 1.5;
+}
+
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+.modal-overlay.open {
+    display: flex;
+    animation: fadeIn 0.2s ease;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.modal {
+    background: white;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 800px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: slideUp 0.3s ease;
+}
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--gray-200);
+}
+.modal-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--gray-900);
+}
+.modal-icon { font-size: 20px; }
+.modal-close {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: var(--gray-100);
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray-500);
+    transition: all 0.15s;
+}
+.modal-close:hover {
+    background: var(--gray-200);
+    color: var(--gray-800);
+}
+
+.modal-tabs {
+    display: flex;
+    gap: 4px;
+    padding: 12px 20px 0;
+    border-bottom: 1px solid var(--gray-200);
+}
+.modal-tab {
+    padding: 8px 16px;
+    border: none;
+    background: transparent;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-500);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: all 0.15s;
+    font-family: inherit;
+}
+.modal-tab:hover { color: var(--gray-800); }
+.modal-tab.active {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+}
+
+.modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+}
+.modal-tab-content { display: none; }
+.modal-tab-content.active { display: block; }
+
+.solution-code {
+    background: #1E1E1E;
+    color: #D4D4D4;
+    padding: 16px;
+    border-radius: var(--radius-sm);
+    font-family: 'Consolas', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+.solution-steps {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--gray-700);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+.solution-steps strong { color: var(--gray-900); }
+
+.btn-copy-solution {
+    margin-top: 12px;
+    padding: 8px 16px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.btn-copy-solution:hover { background: var(--primary-dark); }
+
+body.dark-theme .task-header h1 { color: #E8E8F0; }
+body.dark-theme .task-description {
+    background: #1E1E32;
+    border-color: #333355;
+}
+body.dark-theme .description-header h3 { color: #E8E8F0; }
+body.dark-theme .description-content { color: #A0A0B8; }
+body.dark-theme .description-content strong { color: #E8E8F0; }
+body.dark-theme .editor-panel,
+body.dark-theme .result-panel {
+    background: #1E1E32;
+    border-color: #333355;
+}
+body.dark-theme .panel-header {
+    background: #1A1A2E;
+    border-color: #333355;
+}
+body.dark-theme .panel-title { color: #E8E8F0; }
+body.dark-theme .btn-action {
+    background: #2A2A42;
+    border-color: #333355;
+    color: #A0A0B8;
+}
+body.dark-theme .btn-action:hover {
+    background: #333355;
+    color: #E8E8F0;
+}
+body.dark-theme .editor-actions {
+    background: #1A1A2E;
+    border-color: #333355;
+}
+body.dark-theme .tab-btn { color: #A0A0B8; }
+body.dark-theme .tab-btn:hover { background: #2A2A42; }
+body.dark-theme .tab-btn.active {
+    background: #2A2A42;
+    color: #E8E8F0;
+}
+body.dark-theme .tests-count { background: #333355; color: #A0A0B8; }
+body.dark-theme #testsResult { background: #1E1E32; }
+body.dark-theme .empty-title { color: #E8E8F0; }
+body.dark-theme .test-item {
+    background: #1A1A2E;
+    border-color: #333355;
+}
+body.dark-theme .test-name { color: #E8E8F0; }
+body.dark-theme .test-detail { color: #A0A0B8; }
+body.dark-theme .modal { background: #1E1E32; }
+body.dark-theme .modal-header { border-color: #333355; }
+body.dark-theme .modal-title { color: #E8E8F0; }
+body.dark-theme .modal-close { background: #2A2A42; color: #A0A0B8; }
+body.dark-theme .modal-tabs { border-color: #333355; }
+body.dark-theme .modal-tab { color: #A0A0B8; }
+body.dark-theme .modal-tab.active { color: #818CF8; border-color: #818CF8; }
+body.dark-theme .solution-steps { color: #A0A0B8; }
+body.dark-theme .solution-steps strong { color: #E8E8F0; }
+body.dark-theme .preview-placeholder { background: #1E1E32; }
+
+/* === Адаптивность === */
+@media (max-width: 992px) {
+    .editor-wrapper { grid-template-columns: 1fr; }
+    .code-editor { min-height: 300px; max-height: 300px; }
+    .panel-body { min-height: 300px; }
+    .preview-frame { min-height: 300px; }
+}
+@media (max-width: 600px) {
+    .task-header h1 { font-size: 20px; }
+    .task-meta { font-size: 12px; }
+    .editor-actions { flex-direction: column; }
+    .btn { min-width: 100%; }
+}
+</style>
+
+<script>
+    const taskId = {{ task.id }};
+    const hasAttempts = {{ 'true' if has_attempts else 'false' }};
+    const hasFailedAttempts = {{ 'true' if has_failed_attempts else 'false' }};
+    let solutionLoaded = false;
+
+    const editor = document.getElementById('codeEditor');
+    const editorHint = document.getElementById('editorHint');
+
+    editor.addEventListener('input', function() {
+        if (this.value.trim().length > 0) {
+            editorHint.classList.add('hidden');
+        } else {
+            editorHint.classList.remove('hidden');
+        }
+    });
+
+    if (editor.value.trim().length > 0) {
+        editorHint.classList.add('hidden');
+    }
+
+    editor.addEventListener('keydown', function(e) {
+        if (e.key === 'Tab') {
+            e.preventDefault();
+            const start = this.selectionStart;
+            const end = this.selectionEnd;
+            this.value = this.value.substring(0, start) + '  ' + this.value.substring(end);
+            this.selectionStart = this.selectionEnd = start + 2;
+        }
+    });
+
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelector(`.tab-btn[data-tab="${tabId}"]`).classList.add('active');
+
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.getElementById(`tab-${tabId}`).classList.add('active');
+    }
+
+    function runCode() {
+        const code = editor.value.trim();
+        if (!code) {
+            alert('⚠️ Напишите код перед запуском!');
+            editor.focus();
+            return;
+        }
+
+        fetch('/api/run', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code: code, task_id: taskId })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                const frame = document.getElementById('previewFrame');
+                const placeholder = document.getElementById('previewPlaceholder');
+                frame.srcdoc = data.html;
+                placeholder.classList.add('hidden');
+                switchTab('preview');
+            } else {
+                alert('❌ ' + (data.error || 'Ошибка выполнения'));
+            }
+        })
+        .catch(err => alert('❌ Ошибка: ' + err.message));
+    }
+
+    function submitCode() {
+        const code = editor.value.trim();
+        if (!code) {
+            alert('⚠️ Напишите код перед отправкой!');
+            editor.focus();
+            return;
+        }
+
+        const testsDiv = document.getElementById('testsResult');
+        testsDiv.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon">⏳</div>
+                <div class="empty-title">Проверка решения...</div>
+                <div class="empty-text">Пожалуйста, подождите</div>
+            </div>
+        `;
+        switchTab('tests');
+
+        fetch('/api/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code: code, task_id: taskId })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                renderTests(data);
+                updateTestsCount(data.passed_count, data.total_count, data.all_passed);
+
+                fetch('/api/run', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code: code, task_id: taskId })
+                })
+                .then(r => r.json())
+                .then(runData => {
+                    if (runData.success) {
+                        const frame = document.getElementById('previewFrame');
+                        const placeholder = document.getElementById('previewPlaceholder');
+                        frame.srcdoc = runData.html;
+                        placeholder.classList.add('hidden');
+                    }
+                });
+
+                if (!data.all_passed) {
+                    document.getElementById('solutionBtn').style.display = 'inline-flex';
+                }
+            } else {
+                testsDiv.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">❌</div>
+                        <div class="empty-title">Ошибка</div>
+                        <div class="empty-text">${data.error || 'Не удалось проверить решение'}</div>
+                    </div>
+                `;
+            }
+        })
+        .catch(err => {
+            testsDiv.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">❌</div>
+                    <div class="empty-title">Ошибка сети</div>
+                    <div class="empty-text">${err.message}</div>
+                </div>
+            `;
+        });
+    }
+
+    function renderTests(data) {
+        const testsDiv = document.getElementById('testsResult');
+        const allPassed = data.all_passed;
+
+        let summaryClass = allPassed ? 'success' : 'failed';
+        let summaryIcon = allPassed ? '🎉' : '⚠️';
+        let summaryTitle = allPassed ? 'Отлично! Все тесты пройдены' : 'Не все тесты пройдены';
+        let summarySub = allPassed
+            ? 'Ваше решение полностью соответствует заданию'
+            : 'Изучите ошибки ниже и попробуйте снова';
+
+        let html = `
+            <div class="test-summary ${summaryClass}">
+                <div class="summary-left">
+                    <span class="summary-icon">${summaryIcon}</span>
+                    <div>
+                        <div class="summary-title">${summaryTitle}</div>
+                        <div class="summary-subtitle">${summarySub}</div>
+                    </div>
+                </div>
+                <div class="summary-score">${data.passed_count}/${data.total_count}</div>
+            </div>
+        `;
+
+        if (data.results && data.results.length > 0) {
+            data.results.forEach(test => {
+                html += `
+                    <div class="test-item ${test.passed ? 'passed' : 'failed'}">
+                        <div class="test-icon-wrap">${test.passed ? '✓' : '✕'}</div>
+                        <div class="test-content">
+                            <div class="test-name">${test.name}</div>
+                            <div class="test-detail">${test.detail}</div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        testsDiv.innerHTML = html;
+    }
+
+    function updateTestsCount(passed, total, allPassed) {
+        const countEl = document.getElementById('testsCount');
+        countEl.textContent = `${passed}/${total}`;
+        countEl.className = 'tests-count ' + (allPassed ? 'success' : 'failed');
+    }
+
+    function clearCode() {
+        if (confirm('Очистить весь код? Это действие нельзя отменить.')) {
+            editor.value = '';
+            editorHint.classList.remove('hidden');
+            editor.focus();
+        }
+    }
+
+    function copyCode() {
+        if (!editor.value.trim()) {
+            alert('⚠️ Нечего копировать — редактор пуст');
+            return;
+        }
+        navigator.clipboard.writeText(editor.value).then(() => {
+            const btn = event.target.closest('.btn-copy');
+            const original = btn.innerHTML;
+            btn.innerHTML = '✓ Скопировано';
+            setTimeout(() => btn.innerHTML = original, 1500);
+        });
+    }
+
+    function showSolution() {
+        if (solutionLoaded) {
+            document.getElementById('solutionModal').classList.add('open');
+            return;
+        }
+
+        fetch(`/api/get-solution/${taskId}`)
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('solutionCode').textContent = data.code;
+                    document.getElementById('solutionSteps').textContent = data.steps;
+                    document.getElementById('solutionModal').classList.add('open');
+                    solutionLoaded = true;
+                } else {
+                    alert('⚠️ ' + (data.error || 'Решение недоступно'));
+                }
+            })
+            .catch(err => alert('❌ Ошибка: ' + err.message));
+    }
+
+    function closeSolution() {
+        document.getElementById('solutionModal').classList.remove('open');
+    }
+
+    function switchModalTab(tabId) {
+        document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
+        document.querySelector(`.modal-tab[data-mtab="${tabId}"]`).classList.add('active');
+
+        document.querySelectorAll('.modal-tab-content').forEach(c => c.classList.remove('active'));
+        document.getElementById(`modal-tab-${tabId}`).classList.add('active');
+    }
+
+    function copySolution() {
+        const code = document.getElementById('solutionCode').textContent;
+        navigator.clipboard.writeText(code).then(() => {
+            alert('✅ Код скопирован в буфер обмена!');
+        });
+    }
+
+    document.getElementById('solutionModal').addEventListener('click', function(e) {
+        if (e.target === this) closeSolution();
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeSolution();
+    });
+
+    if (hasFailedAttempts) {
+        document.getElementById('solutionBtn').style.display = 'inline-flex';
+    }
+</script>
+{% endblock %}

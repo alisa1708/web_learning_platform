@@ -1,0 +1,582 @@
+{% extends "base.html" %}
+
+{% block title %}Теория: {{ difficulty|capitalize }}{% endblock %}
+
+{% block content %}
+<div class="theory-container">
+    <div class="theory-header fade-up">
+        <span class="difficulty-badge {{ difficulty }}">
+            {% if difficulty == 'easy' %}🟢 Лёгкий уровень{% elif difficulty == 'medium' %}🟡 Средний уровень{% else %}🔴 Сложный уровень{% endif %}
+        </span>
+        <h1>Теория: {{ difficulty|capitalize }}</h1>
+        <p>Изучите материалы ниже, а затем переходите к практическим заданиям.</p>
+    </div>
+
+    <div class="theory-content">
+        {% if difficulty == 'easy' %}
+        
+        <div class="theory-card fade-up delay-1">
+            <div class="card-number">01</div>
+            <h2>1. Что такое HTML?</h2>
+            <p><strong>HTML</strong> (HyperText Markup Language) — это скелет вашей веб-страницы. Он говорит браузеру, где должен быть заголовок, где абзац, а где картинка.</p>
+            
+            <div class="info-box">
+                <strong>💡 Запомните:</strong> Все элементы HTML пишутся в угловых скобках. Открывающий тег <code>&lt;h1&gt;</code> и закрывающий <code>&lt;/h1&gt;</code>.
+            </div>
+
+            <div class="code-example">
+                <div class="code-header">Основная структура</div>
+                <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Моя страница&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Заголовок&lt;/h1&gt;
+    &lt;p&gt;Это абзац текста&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            </div>
+        </div>
+
+        <div class="theory-card fade-up delay-2">
+            <div class="card-number">02</div>
+            <h2>2. Заголовки и параграфы</h2>
+            <p>Заголовки — это <code>&lt;h1&gt;</code> (самый большой) до <code>&lt;h6&gt;</code> (самый маленький). Параграфы создаются тегом <code>&lt;p&gt;</code>.</p>
+            
+            <div class="code-example">
+                <div class="code-header">Пример</div>
+                <pre><code>&lt;h1&gt;Главный заголовок&lt;/h1&gt;
+&lt;h2&gt;Подзаголовок&lt;/h2&gt;
+&lt;p&gt;Это обычный текст.&lt;/p&gt;</code></pre>
+            </div>
+        </div>
+
+        <div class="theory-card fade-up delay-3">
+            <div class="card-number">03</div>
+            <h2>3. Основы CSS (стили)</h2>
+            <p><strong>CSS</strong> отвечает за внешний вид: цвет, размер, отступы. Он подключается в <code>&lt;head&gt;</code> внутри тега <code>&lt;style&gt;</code>.</p>
+            
+            <div class="code-example">
+                <div class="code-header">CSS</div>
+                <pre><code>&lt;style&gt;
+    h1 { color: blue; }
+    p  { color: green; }
+&lt;/style&gt;</code></pre>
+            </div>
+            
+            <div class="info-box">
+                <strong>💡 Подсказка:</strong> В фигурных скобках <code>{ }</code> вы указываете свойство (например, <code>color</code>), а после двоеточия — его значение (например, <code>blue</code>).
+            </div>
+        </div>
+
+        <div class="theory-card fade-up delay-4">
+            <div class="card-number">04</div>
+            <h2>4. Списки</h2>
+            <p>Неупорядоченный список создается тегом <code>&lt;ul&gt;</code>, а каждый элемент — тегом <code>&lt;li&gt;</code>.</p>
+            
+            <div class="code-example">
+                <div class="code-header">Пример списка</div>
+                <pre><code>&lt;h2&gt;Мои дела&lt;/h2&gt;
+&lt;ul&gt;
+    &lt;li&gt;Купить продукты&lt;/li&gt;
+    &lt;li&gt;Сделать ДЗ&lt;/li&gt;
+    &lt;li&gt;Прочитать книгу&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+            </div>
+        </div>
+
+        <div class="theory-card fade-up delay-5">
+            <div class="card-number">05</div>
+            <h2>5. Теория изучена! Пора практиковаться!</h2>
+            <p>Вы изучили все, что нужно для решения легких заданий. Переходите к практике!</p>
+            
+            <div class="diff-actions">
+                <a href="{{ url_for('profile') }}" class="btn btn-back">← Назад</a>
+                <a href="{{ url_for('profile') }}?difficulty=easy" class="btn btn-practice">✍️ Перейти к заданиям</a>
+            </div>
+        </div>
+
+        {% elif difficulty == 'medium' %}
+        
+        <div class="theory-card fade-up delay-1">
+            <div class="card-number">01</div>
+            <h2>1. Таблицы в HTML</h2>
+            <p>Таблицы создаются тегом <code>&lt;table&gt;</code>. Строки — <code>&lt;tr&gt;</code>, а ячейки — <code>&lt;td&gt;</code>.</p>
+            
+            <div class="info-box">
+                <strong>💡 Запомните:</strong> Всегда закрывайте теги! <code>&lt;/table&gt;</code>, <code>&lt;/tr&gt;</code>, <code>&lt;/td&gt;</code>.
+            </div>
+
+            <div class="code-example">
+                <div class="code-header">Пример таблицы 2x2</div>
+                <pre><code>&lt;table&gt;
+    &lt;tr&gt;
+        &lt;td&gt;1&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;3&lt;/td&gt;&lt;td&gt;4&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;</code></pre>
+            </div>
+            
+            <div class="interactive-demo">
+                <h3>👀 Посмотрите, как это работает:</h3>
+                <div style="padding: 20px;">
+                    <table border="1" style="border-collapse: collapse; margin: 0 auto;">
+                        <tr><td style="padding: 20px;">1</td><td style="padding: 20px;">2</td></tr>
+                        <tr><td style="padding: 20px;">3</td><td style="padding: 20px;">4</td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="theory-card fade-up delay-2">
+            <div class="card-number">02</div>
+            <h2>2. Стилизация таблиц</h2>
+            <p>Чтобы таблица выглядела красиво, добавим границы и отступы через CSS.</p>
+            
+            <div class="code-example">
+                <div class="code-header">CSS для таблицы</div>
+                <pre><code>table { border-collapse: collapse; }
+td { border: 1px solid black; padding: 10px; }</code></pre>
+            </div>
+        </div>
+
+        <div class="theory-card fade-up delay-3">
+            <div class="card-number">03</div>
+            <h2>3. Списки</h2>
+            <p>Списки бывают <strong>маркированными</strong> (<code>&lt;ul&gt;</code>) и <strong>нумерованными</strong> (<code>&lt;ol&gt;</code>).</p>
+            
+            <div class="code-example">
+                <div class="code-header">Пример</div>
+                <pre><code>&lt;ul&gt;
+    &lt;li&gt;Первый пункт&lt;/li&gt;
+    &lt;li&gt;Второй пункт&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+            </div>
+        </div>
+
+        <div class="theory-card fade-up delay-4">
+            <div class="card-number">04</div>
+            <h2>4. Теория изучена! Пора практиковаться!</h2>
+            <p>Вы изучили все, что нужно для решения средних заданий. Переходите к практике!</p>
+            
+            <div class="diff-actions">
+                <a href="{{ url_for('profile') }}" class="btn btn-back">← Назад</a>
+                <a href="{{ url_for('profile') }}?difficulty=medium" class="btn btn-practice">✍️ Перейти к заданиям</a>
+            </div>
+        </div>
+
+        {% elif difficulty == 'hard' %}
+        
+        <div class="theory-card fade-up delay-1">
+            <div class="card-number">01</div>
+            <h2>1. Flexbox: Гибкая верстка</h2>
+            <p><strong>Flexbox</strong> — это способ выравнивания элементов. Он позволяет легко размещать блоки в ряд или в колонку.</p>
+            
+            <div class="info-box">
+                <strong>💡 Запомните:</strong> Чтобы включить Flexbox, родительскому контейнеру нужно задать свойство <code>display: flex</code>.
+            </div>
+
+            <div class="code-example">
+                <div class="code-header">Основы Flexbox</div>
+                <pre><code>.container {
+    display: flex;           /* Включаем Flexbox */
+    justify-content: space-around; /* Распределяем элементы */
+    padding: 20px;
+}
+
+.box {
+    width: 100px;
+    height: 100px;
+    background: #6C63FF;
+}</code></pre>
+            </div>
+            
+            <div class="interactive-demo">
+                <h3>👀 Посмотрите, как это работает:</h3>
+                <div class="flex-demo">
+                    <div class="demo-box" style="background: #6C63FF;"></div>
+                    <div class="demo-box" style="background: #FF6584;"></div>
+                    <div class="demo-box" style="background: #00C9A7;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="theory-card fade-up delay-2">
+            <div class="card-number">02</div>
+            <h2>2. Justify-content: пространство между блоками</h2>
+            <p>Свойство <code>justify-content</code> отвечает за то, как элементы распределяются внутри контейнера.</p>
+            
+            <div class="flex-values">
+                <div class="value-item">
+                    <span class="value-name">flex-start</span>
+                    <div class="mini-flex" style="justify-content: flex-start;">
+                        <div class="mini-box"></div><div class="mini-box"></div>
+                    </div>
+                </div>
+                <div class="value-item">
+                    <span class="value-name">space-around</span>
+                    <div class="mini-flex" style="justify-content: space-around;">
+                        <div class="mini-box"></div><div class="mini-box"></div>
+                    </div>
+                </div>
+                <div class="value-item">
+                    <span class="value-name">space-between</span>
+                    <div class="mini-flex" style="justify-content: space-between;">
+                        <div class="mini-box"></div><div class="mini-box"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Карточка 3: Цвета -->
+        <div class="theory-card fade-up delay-3">
+            <div class="card-number">03</div>
+            <h2>3. Цвета</h2>
+            <p>Для блоков можно использовать любые цвета: названия (<code>red</code>, <code>blue</code>) или HEX-коды (<code>#FF6584</code>).</p>
+            
+            <div class="code-example">
+                <div class="code-header">Примеры цветов</div>
+                <pre><code>.box1 { background: red; }
+.box2 { background: #FF6584; }
+.box3 { background: rgb(0, 201, 167); }</code></pre>
+            </div>
+        </div>
+
+        <div class="theory-card fade-up delay-4">
+            <div class="card-number">04</div>
+            <h2>4. Теория изучена! Пора практиковаться!</h2>
+            <p>Вы изучили все, что нужно для решения сложных заданий. Переходите к практике!</p>
+            
+            <div class="diff-actions">
+                <a href="{{ url_for('profile') }}" class="btn btn-back">← Назад</a>
+                <a href="{{ url_for('profile') }}?difficulty=hard" class="btn btn-practice">✍️ Перейти к заданиям</a>
+            </div>
+        </div>
+
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .theory-container {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    .theory-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .difficulty-badge {
+        display: inline-block;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+
+    .difficulty-badge.easy {
+        background: #D1FAE5;
+        color: #065F46;
+    }
+
+    .difficulty-badge.medium {
+        background: #FEF3C7;
+        color: #92400E;
+    }
+
+    .difficulty-badge.hard {
+        background: #FEE2E2;
+        color: #991B1B;
+    }
+
+    .theory-header h1 {
+        font-size: 36px;
+        font-weight: 800;
+        color: #111827;
+        margin: 0 0 10px 0;
+    }
+
+    .theory-header p {
+        font-size: 16px;
+        color: #6B7280;
+        margin: 0;
+    }
+
+    .fade-up {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUp 0.6s ease forwards;
+    }
+
+    .delay-1 { animation-delay: 0.2s; }
+    .delay-2 { animation-delay: 0.4s; }
+    .delay-3 { animation-delay: 0.6s; }
+    .delay-4 { animation-delay: 0.8s; }
+    .delay-5 { animation-delay: 1.0s; }
+
+    @keyframes fadeInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .theory-card {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        margin-bottom: 30px;
+        position: relative;
+    }
+
+    .card-number {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 48px;
+        font-weight: 800;
+        color: #F3F4F6;
+        line-height: 1;
+    }
+
+    .theory-card h2 {
+        font-size: 22px;
+        font-weight: 700;
+        color: #111827;
+        margin: 0 0 15px 0;
+    }
+
+    .theory-card p {
+        font-size: 15px;
+        line-height: 1.7;
+        color: #374151;
+        margin-bottom: 20px;
+    }
+
+    .theory-card code {
+        background: #F3F4F6;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 14px;
+        color: #111827;
+    }
+
+    .info-box {
+        background: #EEF2FF;
+        border: 1px solid #C7D2FE;
+        border-radius: 10px;
+        padding: 12px 16px;
+        margin-bottom: 20px;
+        font-size: 14px;
+        color: #3730A3;
+    }
+
+    .code-example {
+        background: #FFFFFF;
+        border: 1px solid #E5E7EB;
+        border-radius: 12px;
+        overflow: hidden;
+        margin-top: 15px;
+    }
+
+    .code-header {
+        background: #F3F4F6;
+        color: #374151;
+        padding: 8px 16px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .code-example pre {
+        padding: 16px;
+        margin: 0;
+        color: #111827;
+        font-family: 'Consolas', 'Courier New', monospace;
+        font-size: 14px;
+        line-height: 1.6;
+        white-space: pre-wrap;
+    }
+
+    .interactive-demo {
+        background: #F9FAFB;
+        border-radius: 12px;
+        padding: 20px;
+        margin-top: 20px;
+    }
+
+    .interactive-demo h3 {
+        font-size: 14px;
+        color: #6B7280;
+        margin: 0 0 10px 0;
+    }
+
+    .flex-demo {
+        display: flex;
+        justify-content: space-around;
+        padding: 20px;
+        background: white;
+        border-radius: 8px;
+    }
+
+    .demo-box {
+        width: 80px;
+        height: 80px;
+        border-radius: 8px;
+    }
+
+    .flex-values {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .value-item {
+        background: #F9FAFB;
+        padding: 10px;
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    .value-name {
+        display: block;
+        font-size: 12px;
+        color: #6B7280;
+        margin-bottom: 8px;
+    }
+
+    .mini-flex {
+        display: flex;
+        gap: 5px;
+        background: white;
+        padding: 10px;
+        border-radius: 6px;
+    }
+
+    .mini-box {
+        width: 20px;
+        height: 20px;
+        background: #6366F1;
+        border-radius: 3px;
+    }
+
+    .diff-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .btn {
+        text-decoration: none;
+        padding: 12px 20px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 14px;
+        transition: all 0.3s;
+        text-align: center;
+        flex: 1;
+    }
+
+    .btn-back {
+        background: #F3F4F6;
+        color: #374151;
+    }
+
+    .btn-back:hover {
+        background: #E5E7EB;
+    }
+
+    .btn-practice {
+        background: linear-gradient(135deg, #6366F1, #8B5CF6);
+        color: white;
+    }
+
+    .btn-practice:hover {
+        transform: translateY(-2px);
+        opacity: 0.95;
+    }
+
+    body.dark-theme .theory-header h1 {
+        color: #F9FAFB;
+    }
+
+    body.dark-theme .theory-header p {
+        color: #A0A0B8;
+    }
+
+    body.dark-theme .theory-card {
+        background: #1E1E32;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    body.dark-theme .card-number {
+        color: #2A2A42;
+    }
+
+    body.dark-theme .theory-card h2 {
+        color: #E8E8F0;
+    }
+
+    body.dark-theme .theory-card p {
+        color: #A0A0B8;
+    }
+
+    body.dark-theme .theory-card code {
+        background: #2A2A42;
+        color: #E8E8F0;
+    }
+
+    body.dark-theme .info-box {
+        background: rgba(99, 102, 241, 0.1);
+        border-color: rgba(99, 102, 241, 0.3);
+        color: #A5B4FC;
+    }
+
+    body.dark-theme .interactive-demo {
+        background: #111827;
+    }
+
+    body.dark-theme .flex-demo {
+        background: #2A2A42;
+    }
+
+    body.dark-theme .value-item {
+        background: #111827;
+    }
+
+    body.dark-theme .mini-flex {
+        background: #2A2A42;
+    }
+
+    body.dark-theme .code-example {
+        background: #1E1E1E;
+        border-color: #333355;
+    }
+
+    body.dark-theme .code-header {
+        background: #2D2D2D;
+        color: #A0A0B8;
+    }
+
+    body.dark-theme .code-example pre {
+        color: #D4D4D4;
+    }
+
+    body.dark-theme .btn-back {
+        background: #2A2A42;
+        color: #A0A0B8;
+    }
+
+    body.dark-theme .btn-back:hover {
+        background: #333355;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,15 @@
+C:\Users\alisa\Desktop\web_learning_platform\Lab1Graph\bin\Debug\net8.0-windows\Lab1Graph.exe
+C:\Users\alisa\Desktop\web_learning_platform\Lab1Graph\bin\Debug\net8.0-windows\Lab1Graph.deps.json
+C:\Users\alisa\Desktop\web_learning_platform\Lab1Graph\bin\Debug\net8.0-windows\Lab1Graph.runtimeconfig.json
+C:\Users\alisa\Desktop\web_learning_platform\Lab1Graph\bin\Debug\net8.0-windows\Lab1Graph.dll
+C:\Users\alisa\Desktop\web_learning_platform\Lab1Graph\bin\Debug\net8.0-windows\Lab1Graph.pdb
+C:\Users\alisa\Desktop\web_learning_platform\Lab1Graph\obj\Debug\net8.0-windows\Lab1Graph.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\alisa\Desktop\web_learning_platform\Lab1Graph\obj\Debug\net8.0-windows\Lab1Graph.AssemblyInfoInputs.cache
+C:\Users\alisa\Desktop\web_learning_platform\Lab1Graph\obj\Debug\net8.0-windows\Lab1Graph.AssemblyInfo.cs
+C:\Users\alisa\Desktop\web_learning_platform\Lab1Graph\obj\Debug\net8.0-windows\Lab1Graph.csproj.CoreCompileInputs.cache
+C:\Users\alisa\Desktop\web_learning_platform\Lab1Graph\obj\Debug\net8.0-windows\Lab1Graph.sourcelink.json
+C:\Users\alisa\Desktop\web_learning_platform\Lab1Graph\obj\Debug\net8.0-windows\Lab1Graph.dll
+C:\Users\alisa\Desktop\web_learning_platform\Lab1Graph\obj\Debug\net8.0-windows\refint\Lab1Graph.dll
+C:\Users\alisa\Desktop\web_learning_platform\Lab1Graph\obj\Debug\net8.0-windows\Lab1Graph.pdb
+C:\Users\alisa\Desktop\web_learning_platform\Lab1Graph\obj\Debug\net8.0-windows\Lab1Graph.genruntimeconfig.cache
+C:\Users\alisa\Desktop\web_learning_platform\Lab1Graph\obj\Debug\net8.0-windows\ref\Lab1Graph.dll

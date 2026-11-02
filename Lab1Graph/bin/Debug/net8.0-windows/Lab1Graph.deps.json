@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "Lab1Graph/1.0.0": {
+        "runtime": {
+          "Lab1Graph.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Lab1Graph/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

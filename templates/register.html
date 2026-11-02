@@ -1,0 +1,368 @@
+{% extends "base.html" %}
+
+{% block title %}Регистрация{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+    <div class="auth-info">
+        <h1>Создать аккаунт</h1>
+        <p class="subtitle">Начните обучение прямо сейчас</p>
+        
+        <div class="info-list">
+            <div class="info-item">
+                <span class="info-icon">💻</span>
+                <div>
+                    <strong>Практика в реальном времени</strong>
+                    <span>Пишите код и сразу видите результат</span>
+                </div>
+            </div>
+            <div class="info-item">
+                <span class="info-icon">📊</span>
+                <div>
+                    <strong>Отслеживание прогресса</strong>
+                    <span>Следите за своими достижениями</span>
+                </div>
+            </div>
+            <div class="info-item">
+                <span class="info-icon">🎯</span>
+                <div>
+                    <strong>Интерактивные задания</strong>
+                    <span>Учитесь через практику</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="auth-form-card">
+        <h2>Регистрация</h2>
+        <form method="POST" action="{{ url_for('register') }}">
+            <div class="form-group">
+                <label for="username">Имя пользователя</label>
+                <input type="text" id="username" name="username" placeholder="Придумайте имя" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Пароль</label>
+                <input type="password" id="password" name="password" placeholder="Придумайте пароль" required>
+                <span class="hint">Минимум 4 символа</span>
+            </div>
+
+            <div class="form-group">
+                <label for="confirm_password">Подтверждение пароля</label>
+                <input type="password" id="confirm_password" name="confirm_password" placeholder="Повторите пароль" required>
+            </div>
+
+            <div class="checkbox-group">
+                <input type="checkbox" id="agree" required>
+                <label for="agree">Я согласен с условиями</label>
+            </div>
+
+            {% if error %}
+            <div class="error-box">{{ error }}</div>
+            {% endif %}
+
+            <button type="submit" class="btn-submit">Создать аккаунт</button>
+        </form>
+
+        <div class="divider">или</div>
+
+        <div class="social-login">
+            <button class="btn-google" type="button" onclick="alert('Авторизация через Google скоро появится!')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <path d="M23.52 12.29C23.52 11.44 23.44 10.62 23.3 9.83H12V14.47H18.46C18.18 15.95 17.33 17.21 16.08 18.07V21H19.89C22.19 18.82 23.52 15.84 23.52 12.29Z" fill="#4285F4"/>
+                    <path d="M12 24C15.16 24 17.8 22.92 19.89 21L16.08 18.07C14.93 18.81 13.58 19.26 12 19.26C8.94 19.26 6.36 17.22 5.39 14.45H1.44V17.49C3.52 21.6 7.49 24 12 24Z" fill="#34A853"/>
+                    <path d="M5.39 14.45C5.13 13.66 4.99 12.83 4.99 12C4.99 11.17 5.13 10.34 5.39 9.55V6.51H1.44C0.52 8.32 0 10.38 0 12C0 13.62 0.52 15.68 1.44 17.49L5.39 14.45Z" fill="#FBBC05"/>
+                    <path d="M12 4.74C13.72 4.74 15.25 5.34 16.46 6.49L19.96 3C17.8 0.98 15.16 0 12 0C7.49 0 3.52 2.4 1.44 6.51L5.39 9.55C6.36 6.78 8.94 4.74 12 4.74Z" fill="#EA4335"/>
+                </svg>
+                Войти через Google
+            </button>
+        </div>
+
+        <div class="auth-footer">
+            <span>Уже есть аккаунт?</span>
+            <a href="{{ url_for('login') }}">Войти</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .auth-wrapper {
+        max-width: 950px;
+        margin: 40px auto;
+        padding: 0 20px;
+        display: flex;
+        gap: 40px;
+        align-items: flex-start;
+    }
+
+    /* Левая колонка */
+    .auth-info {
+        flex: 1;
+        padding-top: 20px;
+    }
+
+    .auth-info h1 {
+        font-size: 32px;
+        font-weight: 700;
+        color: #111827;
+        margin: 0 0 10px 0;
+    }
+
+    .auth-info .subtitle {
+        font-size: 16px;
+        color: #6B7280;
+        margin: 0 0 30px 0;
+    }
+
+    .info-list {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .info-icon {
+        font-size: 24px;
+        line-height: 1;
+    }
+
+    .info-item strong {
+        display: block;
+        color: #111827;
+        font-size: 15px;
+        margin-bottom: 2px;
+    }
+
+    .info-item span:last-child {
+        display: block;
+        color: #6B7280;
+        font-size: 13px;
+    }
+
+    .auth-form-card {
+        flex: 1;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        padding: 36px;
+    }
+
+    .auth-form-card h2 {
+        font-size: 24px;
+        font-weight: 700;
+        color: #111827;
+        margin: 0 0 24px 0;
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 6px;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid #E5E7EB;
+        border-radius: 10px;
+        background: #F9FAFB;
+        font-size: 14px;
+        color: #111827;
+        transition: all 0.3s;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: #6366F1;
+        background: white;
+    }
+
+    .form-group .hint {
+        display: block;
+        font-size: 12px;
+        color: #9CA3AF;
+        margin-top: 4px;
+    }
+
+    .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 18px;
+        font-size: 13px;
+        color: #6B7280;
+    }
+
+    .checkbox-group input {
+        width: 16px;
+        height: 16px;
+        accent-color: #6366F1;
+    }
+
+    .error-box {
+        background: #FEF2F2;
+        border: 1px solid #FECACA;
+        color: #DC2626;
+        padding: 10px 12px;
+        border-radius: 8px;
+        font-size: 13px;
+        margin-bottom: 16px;
+    }
+
+    .btn-submit {
+        background: linear-gradient(135deg, #6366F1, #8B5CF6);
+        color: white;
+        border: none;
+        padding: 14px;
+        border-radius: 10px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        width: 100%;
+        transition: all 0.3s;
+    }
+
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        opacity: 0.95;
+    }
+
+    .divider {
+        display: flex;
+        align-items: center;
+        margin: 20px 0;
+        font-size: 13px;
+        color: #9CA3AF;
+    }
+
+    .divider::before, .divider::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: #E5E7EB;
+    }
+
+    .divider span {
+        padding: 0 12px;
+    }
+
+    .social-login {
+        text-align: center;
+    }
+
+    .btn-google {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: white;
+        border: 1px solid #E5E7EB;
+        border-radius: 10px;
+        padding: 12px 20px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #374151;
+        cursor: pointer;
+        transition: all 0.3s;
+        width: 100%;
+    }
+
+    .btn-google:hover {
+        background: #F9FAFB;
+        border-color: #9CA3AF;
+    }
+
+    .auth-footer {
+        margin-top: 16px;
+        text-align: center;
+        font-size: 14px;
+        color: #6B7280;
+    }
+
+    .auth-footer a {
+        color: #6366F1;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    body.dark-theme .auth-info h1,
+    body.dark-theme .auth-form-card h2 {
+        color: #F9FAFB;
+    }
+
+    body.dark-theme .auth-info .subtitle,
+    body.dark-theme .info-item span:last-child,
+    body.dark-theme .auth-footer {
+        color: #A0A0B8;
+    }
+
+    body.dark-theme .info-item strong {
+        color: #E8E8F0;
+    }
+
+    body.dark-theme .auth-form-card {
+        background: #1E1E32;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    body.dark-theme .form-group label {
+        color: #E8E8F0;
+    }
+
+    body.dark-theme .form-group input {
+        background: #111827;
+        border-color: #333355;
+        color: #F9FAFB;
+    }
+
+    body.dark-theme .form-group input:focus {
+        border-color: #818CF8;
+        background: #111827;
+    }
+
+    body.dark-theme .divider::before,
+    body.dark-theme .divider::after {
+        background: #333355;
+    }
+
+    body.dark-theme .btn-google {
+        background: #2A2A42;
+        border-color: #333355;
+        color: #E8E8F0;
+    }
+
+    body.dark-theme .btn-google:hover {
+        background: #333355;
+    }
+
+    body.dark-theme .auth-footer a {
+        color: #818CF8;
+    }
+
+    @media (max-width: 768px) {
+        .auth-wrapper {
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .auth-info {
+            text-align: center;
+        }
+
+        .info-list {
+            align-items: center;
+        }
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,468 @@
+{% extends "base.html" %}
+
+{% block title %}Вход на платформу{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div id="landingSection" class="landing-section">
+        <div class="landing-content">
+            <div class="landing-badge fade-up delay-1">
+                🚀 Платформа веб-программирования
+            </div>
+            
+            <h1 class="landing-title fade-up delay-2">
+                Изучай <span class="gradient-text">HTML и CSS</span><br>через практику
+            </h1>
+            
+            <p class="landing-desc fade-up delay-3">
+                Решай реальные задания прямо в браузере. Получай мгновенную обратную связь,
+                отслеживай свой прогресс и становись профессиональным разработчиком.
+            </p>
+            
+            <div class="landing-features fade-up delay-4">
+                <div class="feature-item">
+                    <div class="feature-icon">💻</div>
+                    <div class="feature-text">
+                        <strong>Практика</strong>
+                        <span>Пиши код онлайн без установки программ</span>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-text">
+                        <strong>Отслеживание прогресса</strong>
+                        <span>Статистика и проценты выполнения</span>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-text">
+                        <strong>Задания</strong>
+                        <span>От простых до сложных уровней</span>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn-landing fade-up delay-5" onclick="showLogin()">
+                Начать обучение →
+            </button>
+        </div>
+    </div>
+
+    <div id="loginSection" class="login-section" style="display: none;">
+        <div class="login-card">
+            <div class="login-header">
+                <h1> Добро пожаловать!</h1>
+                <p>Войдите в систему, чтобы продолжить обучение</p>
+            </div>
+            
+            <div class="social-login">
+                <a href="/login/google" class="btn-google">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                        <path d="M23.52 12.29C23.52 11.44 23.44 10.62 23.3 9.83H12V14.47H18.46C18.18 15.95 17.33 17.21 16.08 18.07V21H19.89C22.19 18.82 23.52 15.84 23.52 12.29Z" fill="#4285F4"/>
+                        <path d="M12 24C15.16 24 17.8 22.92 19.89 21L16.08 18.07C14.93 18.81 13.58 19.26 12 19.26C8.94 19.26 6.36 17.22 5.39 14.45H1.44V17.49C3.52 21.6 7.49 24 12 24Z" fill="#34A853"/>
+                        <path d="M5.39 14.45C5.13 13.66 4.99 12.83 4.99 12C4.99 11.17 5.13 10.34 5.39 9.55V6.51H1.44C0.52 8.32 0 10.38 0 12C0 13.62 0.52 15.68 1.44 17.49L5.39 14.45Z" fill="#FBBC05"/>
+                        <path d="M12 4.74C13.72 4.74 15.25 5.34 16.46 6.49L19.96 3C17.8 0.98 15.16 0 12 0C7.49 0 3.52 2.4 1.44 6.51L5.39 9.55C6.36 6.78 8.94 4.74 12 4.74Z" fill="#EA4335"/>
+                    </svg>
+                    Войти через Google
+                </a>
+            </div>
+            
+            <div class="divider">
+                <span>или</span>
+            </div>
+            
+            <form method="POST" action="{{ url_for('login') }}" class="login-form">
+                <div class="form-group">
+                    <label for="username">Логин</label>
+                    <input type="text" id="username" name="username" placeholder="Введите ваш логин" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Пароль</label>
+                    <input type="password" id="password" name="password" placeholder="Введите ваш пароль" required>
+                </div>
+                
+                {% if error %}
+                <div class="error-message">{{ error }}</div>
+                {% endif %}
+                
+                <button type="submit" class="btn-login">Войти</button>
+            </form>
+            
+            <div class="login-footer">
+                <span>Нет аккаунта?</span>
+                <a href="{{ url_for('register') }}">Зарегистрироваться</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showLogin() {
+        const landing = document.getElementById('landingSection');
+        const login = document.getElementById('loginSection');
+        
+        landing.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        landing.style.opacity = '0';
+        landing.style.transform = 'translateY(-30px)';
+        
+        setTimeout(() => {
+            landing.style.display = 'none';
+            login.style.display = 'block';
+            login.style.animation = 'fadeInUp 0.8s ease forwards';
+        }, 500);
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        // Если в URL есть параметр 'show_login' или пользователь кликнул по ссылке "Вход"
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('show_login') === '1') {
+            showLogin();
+        }
+    });
+    
+    setTimeout(() => {
+        const landing = document.getElementById('landingSection');
+        if (landing && landing.style.display !== 'none') {
+            showLogin();
+        }
+    }, 6000);
+</script>
+
+<style>
+    .auth-container {
+        max-width: 500px;
+        margin: 40px auto;
+        padding: 0 20px;
+        min-height: 70vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .landing-section {
+        width: 100%;
+    }
+    
+    .landing-content {
+        text-align: center;
+    }
+    
+    .landing-badge {
+        display: inline-block;
+        background: rgba(99, 102, 241, 0.1);
+        border: 1px solid rgba(99, 102, 241, 0.3);
+        color: #6366F1;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+    
+    .landing-title {
+        font-size: 42px;
+        font-weight: 800;
+        line-height: 1.2;
+        color: #111827;
+        margin: 0 0 20px 0;
+        letter-spacing: -1px;
+    }
+    
+    .gradient-text {
+        background: linear-gradient(135deg, #6366F1, #8B5CF6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .landing-desc {
+        font-size: 16px;
+        color: #6B7280;
+        line-height: 1.6;
+        margin: 0 0 30px 0;
+    }
+    
+    .landing-features {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin-bottom: 30px;
+    }
+    
+    .feature-item {
+        background: #F9FAFB;
+        border-radius: 12px;
+        padding: 16px;
+        text-align: center;
+    }
+    
+    .feature-icon {
+        font-size: 24px;
+        margin-bottom: 8px;
+    }
+    
+    .feature-text strong {
+        display: block;
+        color: #111827;
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
+    
+    .feature-text span {
+        display: block;
+        color: #6B7280;
+        font-size: 12px;
+        line-height: 1.4;
+    }
+    
+    .btn-landing {
+        background: linear-gradient(135deg, #6366F1, #8B5CF6);
+        color: white;
+        border: none;
+        padding: 16px 32px;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s, opacity 0.2s;
+    }
+    
+    .btn-landing:hover {
+        transform: translateY(-2px);
+        opacity: 0.95;
+    }
+    
+    .fade-up {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUp 0.6s ease forwards;
+    }
+    
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.3s; }
+    .delay-3 { animation-delay: 0.5s; }
+    .delay-4 { animation-delay: 0.7s; }
+    .delay-5 { animation-delay: 1s; }
+    
+    @keyframes fadeInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .login-section {
+        width: 100%;
+    }
+    
+    .login-card {
+        background: #FFFFFF;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        padding: 40px;
+        text-align: center;
+    }
+    
+    .login-header h1 {
+        font-size: 28px;
+        color: #111827;
+        margin: 0 0 10px 0;
+    }
+    
+    .login-header p {
+        font-size: 14px;
+        color: #6B7280;
+        margin: 0 0 24px 0;
+    }
+    
+    .social-login {
+        margin-bottom: 20px;
+    }
+    
+    .btn-google {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: white;
+        border: 1px solid #E5E7EB;
+        border-radius: 10px;
+        padding: 12px 20px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #374151;
+        text-decoration: none;
+        transition: all 0.3s;
+        width: 100%;
+    }
+    
+    .btn-google:hover {
+        background: #F9FAFB;
+        border-color: #9CA3AF;
+    }
+    
+    .divider {
+        display: flex;
+        align-items: center;
+        margin: 20px 0;
+    }
+    
+    .divider span {
+        padding: 0 12px;
+        color: #9CA3AF;
+        font-size: 13px;
+    }
+    
+    .divider::before, .divider::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: #E5E7EB;
+    }
+    
+    .login-form {
+        text-align: left;
+    }
+    
+    .form-group {
+        margin-bottom: 16px;
+    }
+    
+    .form-group label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 6px;
+    }
+    
+    .form-group input {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid #E5E7EB;
+        border-radius: 10px;
+        font-size: 14px;
+        background: #F9FAFB;
+        color: #111827;
+        transition: all 0.3s;
+    }
+    
+    .form-group input:focus {
+        outline: none;
+        border-color: #6366F1;
+        background: white;
+    }
+    
+    .error-message {
+        background: #FEF2F2;
+        border: 1px solid #FECACA;
+        color: #DC2626;
+        padding: 10px 12px;
+        border-radius: 8px;
+        font-size: 13px;
+        margin-bottom: 16px;
+    }
+    
+    .btn-login {
+        background: linear-gradient(135deg, #6366F1, #8B5CF6);
+        color: white;
+        border: none;
+        padding: 14px;
+        border-radius: 10px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        width: 100%;
+        transition: transform 0.2s;
+    }
+    
+    .btn-login:hover {
+        transform: translateY(-2px);
+    }
+    
+    .login-footer {
+        margin-top: 20px;
+        font-size: 14px;
+    }
+    
+    .login-footer a {
+        color: #6366F1;
+        text-decoration: none;
+        font-weight: 600;
+    }
+    
+    /* ===== ТЁМНАЯ ТЕМА ===== */
+    body.dark-theme .landing-title {
+        color: #F9FAFB;
+    }
+    
+    body.dark-theme .landing-desc {
+        color: #A0A0B8;
+    }
+    
+    body.dark-theme .feature-item {
+        background: #1E1E32;
+    }
+    
+    body.dark-theme .feature-text strong {
+        color: #E8E8F0;
+    }
+    
+    body.dark-theme .feature-text span {
+        color: #A0A0B8;
+    }
+    
+    body.dark-theme .login-card {
+        background: #1E1E32;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+    
+    body.dark-theme .login-header h1 {
+        color: #E8E8F0;
+    }
+    
+    body.dark-theme .login-header p {
+        color: #A0A0B8;
+    }
+    
+    body.dark-theme .btn-google {
+        background: #2A2A42;
+        border-color: #333355;
+        color: #E8E8F0;
+    }
+    
+    body.dark-theme .btn-google:hover {
+        background: #333355;
+        border-color: #555577;
+    }
+    
+    body.dark-theme .divider span {
+        color: #6B7280;
+    }
+    
+    body.dark-theme .divider::before, body.dark-theme .divider::after {
+        background: #333355;
+    }
+    
+    body.dark-theme .form-group label {
+        color: #E8E8F0;
+    }
+    
+    body.dark-theme .form-group input {
+        background: #111827;
+        border-color: #333355;
+        color: #F9FAFB;
+    }
+    
+    body.dark-theme .form-group input:focus {
+        border-color: #818CF8;
+        background: #111827;
+    }
+    
+    body.dark-theme .login-footer a {
+        color: #818CF8;
+    }
+</style>
+{% endblock %}

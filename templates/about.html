@@ -1,0 +1,872 @@
+{% extends "base.html" %}
+
+{% block title %}О платформе{% endblock %}
+
+{% block content %}
+<div class="about-page">
+    <!-- Hero секция -->
+    <section class="about-hero">
+        <div class="about-hero-content">
+            <div class="about-hero-text">
+                <span class="about-badge">🚀 О платформе</span>
+                <h1>История программирования <br>и <span>наша миссия</span></h1>
+                <p>Платформа создана для того, чтобы сделать обучение веб-программированию доступным, интерактивным и увлекательным.</p>
+                <div class="about-hero-buttons">
+                    <a href="#history" class="btn btn-primary">📜 История</a>
+                    <a href="#mission" class="btn btn-secondary">🎯 Наша миссия</a>
+                </div>
+            </div>
+            <div class="about-hero-image">
+                <div class="about-float-cards">
+                    <div class="float-card" style="animation-delay: 0s;">💻</div>
+                    <div class="float-card" style="animation-delay: 0.5s;">🌐</div>
+                    <div class="float-card" style="animation-delay: 1s;">⚡</div>
+                    <div class="float-card" style="animation-delay: 1.5s;">🎨</div>
+                </div>
+            </div>
+        </div>
+        <div class="about-wave">
+            <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 60L60 50C120 40 240 20 360 25C480 30 600 60 720 65C840 70 960 50 1080 40C1200 30 1320 30 1380 30L1440 30V120H0V60Z" fill="#F9FAFB"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- История программирования -->
+    <section class="about-section" id="history">
+        <div class="about-container">
+            <div class="about-section-header">
+                <span class="about-section-badge">📜 История</span>
+                <h2>Как развивалось программирование</h2>
+                <p>От первых вычислительных машин до современных веб-технологий — путь, который изменил мир.</p>
+            </div>
+
+            <div class="about-timeline">
+                <div class="timeline-item">
+                    <div class="timeline-icon">🧮</div>
+                    <div class="timeline-content">
+                        <span class="timeline-year">1843</span>
+                        <h3>Первый алгоритм</h3>
+                        <p>Ада Лавлейс написала первый в мире алгоритм для аналитической машины Чарльза Бэббиджа. Она считается первым программистом в истории.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-icon">💾</div>
+                    <div class="timeline-content">
+                        <span class="timeline-year">1940-1950</span>
+                        <h3>Первые компьютеры</h3>
+                        <p>Появление ENIAC и других первых электронных вычислительных машин. Программирование выполнялось на машинном языке.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-icon">📝</div>
+                    <div class="timeline-content">
+                        <span class="timeline-year">1950-1960</span>
+                        <h3>Языки высокого уровня</h3>
+                        <p>Создание первых языков программирования: Fortran (1957), Lisp (1958), Cobol (1959). Программирование стало доступнее.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-icon">🖥️</div>
+                    <div class="timeline-content">
+                        <span class="timeline-year">1970-1980</span>
+                        <h3>Эра персональных компьютеров</h3>
+                        <p>Появление Apple II, IBM PC. Языки C (1972) и Pascal (1970) стали стандартами в образовании.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-icon">🌍</div>
+                    <div class="timeline-content">
+                        <span class="timeline-year">1990-2000</span>
+                        <h3>Интернет и веб</h3>
+                        <p>Появление HTML (1993), JavaScript (1995), CSS (1996). Начало эры веб-разработки и первых браузеров.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-icon">🚀</div>
+                    <div class="timeline-content">
+                        <span class="timeline-year">2010-настоящее</span>
+                        <h3>Современная веб-разработка</h3>
+                        <p>Фреймворки React, Vue, Angular. Создание PWA, SPA, серверных технологий (Node.js, Python). Веб стал платформой для всего.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Наша миссия -->
+    <section class="about-section about-mission" id="mission">
+        <div class="about-container">
+            <div class="about-section-header">
+                <span class="about-section-badge">🎯 Миссия</span>
+                <h2>Почему мы создали эту платформу</h2>
+                <p>Мы верим, что каждый может научиться программировать, если у него есть правильные инструменты и поддержка.</p>
+            </div>
+
+            <div class="about-mission-grid">
+                <div class="mission-card">
+                    <div class="mission-icon">📚</div>
+                    <h3>Доступное обучение</h3>
+                    <p>Мы создали платформу, которая делает обучение веб-программированию бесплатным и доступным для всех желающих.</p>
+                </div>
+
+                <div class="mission-card">
+                    <div class="mission-icon">💡</div>
+                    <h3>Практика важнее теории</h3>
+                    <p>Вы можете сразу писать код и видеть результат — это помогает быстрее усваивать материал и развивать навыки.</p>
+                </div>
+
+                <div class="mission-card">
+                    <div class="mission-icon">📊</div>
+                    <h3>Отслеживание прогресса</h3>
+                    <p>Личный кабинет показывает ваш прогресс, что мотивирует двигаться дальше и достигать новых целей.</p>
+                </div>
+
+                <div class="mission-card">
+                    <div class="mission-icon">🔄</div>
+                    <h3>Итеративное обучение</h3>
+                    <p>Вы можете возвращаться к заданиям, улучшать свои решения и наблюдать, как растут ваши навыки.</p>
+                </div>
+
+                <div class="mission-card">
+                    <div class="mission-icon">🤝</div>
+                    <h3>Сообщество</h3>
+                    <p>Мы создаем дружелюбное сообщество, где можно делиться опытом и учиться друг у друга.</p>
+                </div>
+
+                <div class="mission-card">
+                    <div class="mission-icon">🌟</div>
+                    <h3>Вдохновение</h3>
+                    <p>Мы хотим вдохновлять людей на создание своих проектов и реализацию идей через программирование.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Цели платформы -->
+    <section class="about-section about-goals">
+        <div class="about-container">
+            <div class="about-section-header">
+                <span class="about-section-badge">🏆 Цели</span>
+                <h2>Чего мы хотим достичь</h2>
+            </div>
+
+            <div class="about-goals-grid">
+                <div class="goal-card">
+                    <div class="goal-number">01</div>
+                    <h3>Обучить основам веб-разработки</h3>
+                    <p>Дать студентам фундаментальные знания HTML, CSS и JavaScript для создания современных веб-сайтов.</p>
+                </div>
+
+                <div class="goal-card">
+                    <div class="goal-number">02</div>
+                    <h3>Развить практические навыки</h3>
+                    <p>Помочь студентам научиться применять знания на практике через интерактивные задания и проекты.</p>
+                </div>
+
+                <div class="goal-card">
+                    <div class="goal-number">03</div>
+                    <h3>Создать комфортную среду</h3>
+                    <p>Обеспечить удобную и дружелюбную среду для обучения, где ошибки — это часть процесса.</p>
+                </div>
+
+                <div class="goal-card">
+                    <div class="goal-number">04</div>
+                    <h3>Подготовить к реальным проектам</h3>
+                    <p>Дать студентам навыки и уверенность для работы над реальными веб-проектами и портфолио.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Призыв к действию -->
+    <section class="about-cta">
+        <div class="about-container">
+            <div class="about-cta-content">
+                <h2>Готовы начать свой путь?</h2>
+                <p>Присоединяйтесь к нашей платформе и начните изучать веб-программирование уже сегодня!</p>
+                {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('profile') }}" class="btn btn-primary btn-large">🚀 Перейти к заданиям</a>
+                {% else %}
+                    <div class="about-cta-buttons">
+                        <a href="{{ url_for('register') }}" class="btn btn-primary btn-large">🚀 Начать обучение</a>
+                        <a href="{{ url_for('login') }}" class="btn btn-outline btn-large">🔐 Войти</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+</div>
+
+<style>
+/* ===== СТРАНИЦА О ПЛАТФОРМЕ ===== */
+.about-page {
+    background: #F9FAFB;
+    min-height: 100vh;
+}
+
+/* Hero секция */
+.about-hero {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 60px 0 40px;
+    position: relative;
+    overflow: hidden;
+}
+
+.about-hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: aboutGlow 8s ease-in-out infinite alternate;
+}
+
+@keyframes aboutGlow {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(-50px, -30px) scale(1.2); }
+}
+
+.about-hero-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 32px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+.about-hero-text .about-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 20px;
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    backdrop-filter: blur(10px);
+}
+
+.about-hero-text h1 {
+    font-size: 42px;
+    font-weight: 800;
+    color: white;
+    line-height: 1.2;
+    margin-bottom: 16px;
+}
+
+.about-hero-text h1 span {
+    background: linear-gradient(135deg, #FCD34D, #F59E0B);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.about-hero-text p {
+    font-size: 18px;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.8;
+    max-width: 500px;
+    margin-bottom: 24px;
+}
+
+.about-hero-buttons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.about-hero-buttons .btn-secondary {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.about-hero-buttons .btn-secondary:hover {
+    background: rgba(255,255,255,0.25);
+}
+
+/* Плавающие иконки */
+.about-hero-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.about-float-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.about-float-cards .float-card {
+    width: 80px;
+    height: 80px;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    border: 1px solid rgba(255,255,255,0.15);
+    animation: floatCard 4s ease-in-out infinite;
+}
+
+.about-float-cards .float-card:nth-child(1) { animation-delay: 0s; }
+.about-float-cards .float-card:nth-child(2) { animation-delay: 0.5s; }
+.about-float-cards .float-card:nth-child(3) { animation-delay: 1s; }
+.about-float-cards .float-card:nth-child(4) { animation-delay: 1.5s; }
+
+@keyframes floatCard {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-15px) rotate(5deg); }
+}
+
+/* Волна */
+.about-wave {
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    z-index: 2;
+}
+
+.about-wave svg {
+    display: block;
+    width: 100%;
+}
+
+/* Контейнер */
+.about-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 32px;
+}
+
+/* Секции */
+.about-section {
+    padding: 80px 0;
+}
+
+.about-section-header {
+    text-align: center;
+    margin-bottom: 48px;
+}
+
+.about-section-badge {
+    display: inline-block;
+    padding: 4px 16px;
+    background: #EEF2FF;
+    color: #6366F1;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.about-section-header h2 {
+    font-size: 36px;
+    font-weight: 800;
+    color: #111827;
+    margin-bottom: 12px;
+}
+
+.about-section-header p {
+    font-size: 18px;
+    color: #6B7280;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Таймлайн */
+.about-timeline {
+    position: relative;
+    padding-left: 40px;
+}
+
+.about-timeline::before {
+    content: '';
+    position: absolute;
+    left: 16px;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(to bottom, #667eea, #764ba2);
+    border-radius: 2px;
+}
+
+.timeline-item {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 40px;
+    position: relative;
+}
+
+.timeline-item:last-child {
+    margin-bottom: 0;
+}
+
+.timeline-icon {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border: 2px solid #EEF2FF;
+    position: relative;
+    z-index: 1;
+}
+
+.timeline-content {
+    background: white;
+    padding: 20px 24px;
+    border-radius: 12px;
+    border: 1px solid #E5E7EB;
+    flex: 1;
+    transition: all 0.3s ease;
+}
+
+.timeline-content:hover {
+    border-color: #667eea;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
+}
+
+.timeline-year {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    color: #667eea;
+    background: #EEF2FF;
+    padding: 2px 12px;
+    border-radius: 12px;
+    margin-bottom: 6px;
+}
+
+.timeline-content h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 4px;
+}
+
+.timeline-content p {
+    color: #6B7280;
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Миссия */
+.about-mission {
+    background: white;
+}
+
+.about-mission-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.mission-card {
+    padding: 32px 24px;
+    background: #F9FAFB;
+    border-radius: 16px;
+    border: 1px solid #E5E7EB;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.mission-card:hover {
+    transform: translateY(-4px);
+    border-color: #667eea;
+    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.1);
+}
+
+.mission-icon {
+    font-size: 36px;
+    margin-bottom: 12px;
+}
+
+.mission-card h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 8px;
+}
+
+.mission-card p {
+    color: #6B7280;
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Цели */
+.about-goals {
+    background: #F9FAFB;
+}
+
+.about-goals-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+}
+
+.goal-card {
+    background: white;
+    padding: 32px;
+    border-radius: 16px;
+    border: 1px solid #E5E7EB;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.goal-card:hover {
+    border-color: #667eea;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.08);
+}
+
+.goal-number {
+    font-size: 48px;
+    font-weight: 800;
+    color: #EEF2FF;
+    position: absolute;
+    top: 12px;
+    right: 20px;
+    line-height: 1;
+}
+
+.goal-card h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 8px;
+}
+
+.goal-card p {
+    color: #6B7280;
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* CTA секция */
+.about-cta {
+    padding: 80px 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.about-cta-content {
+    text-align: center;
+    color: white;
+}
+
+.about-cta-content h2 {
+    font-size: 36px;
+    font-weight: 800;
+    margin-bottom: 12px;
+}
+
+.about-cta-content p {
+    font-size: 18px;
+    opacity: 0.9;
+    margin-bottom: 24px;
+}
+
+.about-cta-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.about-cta-content .btn-large {
+    padding: 14px 36px;
+    font-size: 16px;
+}
+
+.about-cta-content .btn-outline {
+    background: transparent;
+    color: white;
+    border: 2px solid rgba(255,255,255,0.3);
+}
+
+.about-cta-content .btn-outline:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(255,255,255,0.5);
+}
+
+/* ===== ТЁМНАЯ ТЕМА ДЛЯ СТРАНИЦЫ О ПЛАТФОРМЕ ===== */
+body.dark-theme .about-page {
+    background: #0F0F1A;
+}
+
+body.dark-theme .about-hero {
+    background: linear-gradient(135deg, #1A1A2E 0%, #2D1B4E 100%);
+}
+
+body.dark-theme .about-hero-text .about-badge {
+    background: rgba(129, 140, 248, 0.2);
+    color: #818CF8;
+}
+
+body.dark-theme .about-hero-text h1 {
+    color: #E8E8F0;
+}
+
+body.dark-theme .about-hero-text h1 span {
+    background: linear-gradient(135deg, #FCD34D, #F59E0B);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+body.dark-theme .about-hero-text p {
+    color: #A0A0B8;
+}
+
+body.dark-theme .about-hero-buttons .btn-secondary {
+    background: rgba(255, 255, 255, 0.08);
+    color: #A0A0B8;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-theme .about-hero-buttons .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #E8E8F0;
+}
+
+body.dark-theme .about-float-cards .float-card {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+body.dark-theme .about-section {
+    background: #0F0F1A;
+}
+
+body.dark-theme .about-mission {
+    background: #1A1A2E;
+}
+
+body.dark-theme .about-goals {
+    background: #0F0F1A;
+}
+
+body.dark-theme .about-section-badge {
+    background: rgba(129, 140, 248, 0.15);
+    color: #818CF8;
+}
+
+body.dark-theme .about-section-header h2 {
+    color: #E8E8F0;
+}
+
+body.dark-theme .about-section-header p {
+    color: #A0A0B8;
+}
+
+body.dark-theme .about-timeline::before {
+    background: linear-gradient(to bottom, #818CF8, #A78BFA);
+}
+
+body.dark-theme .timeline-icon {
+    background: #1E1E32;
+    border-color: #333355;
+}
+
+body.dark-theme .timeline-content {
+    background: #1E1E32;
+    border-color: #333355;
+}
+
+body.dark-theme .timeline-content:hover {
+    border-color: #818CF8;
+    box-shadow: 0 4px 12px rgba(129, 140, 248, 0.15);
+}
+
+body.dark-theme .timeline-year {
+    background: rgba(129, 140, 248, 0.15);
+    color: #818CF8;
+}
+
+body.dark-theme .timeline-content h3 {
+    color: #E8E8F0;
+}
+
+body.dark-theme .timeline-content p {
+    color: #A0A0B8;
+}
+
+body.dark-theme .mission-card {
+    background: #1A1A2E;
+    border-color: #333355;
+}
+
+body.dark-theme .mission-card:hover {
+    border-color: #818CF8;
+    box-shadow: 0 8px 24px rgba(129, 140, 248, 0.1);
+}
+
+body.dark-theme .mission-card h3 {
+    color: #E8E8F0;
+}
+
+body.dark-theme .mission-card p {
+    color: #A0A0B8;
+}
+
+body.dark-theme .goal-card {
+    background: #1E1E32;
+    border-color: #333355;
+}
+
+body.dark-theme .goal-card:hover {
+    border-color: #818CF8;
+    box-shadow: 0 4px 12px rgba(129, 140, 248, 0.08);
+}
+
+body.dark-theme .goal-card h3 {
+    color: #E8E8F0;
+}
+
+body.dark-theme .goal-card p {
+    color: #A0A0B8;
+}
+
+body.dark-theme .goal-number {
+    color: rgba(255, 255, 255, 0.04);
+}
+
+body.dark-theme .about-cta {
+    background: linear-gradient(135deg, #1A1A2E 0%, #2D1B4E 100%);
+}
+
+body.dark-theme .about-cta-content h2 {
+    color: #E8E8F0;
+}
+
+body.dark-theme .about-cta-content p {
+    color: #A0A0B8;
+}
+
+body.dark-theme .about-cta-content .btn-outline {
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #A0A0B8;
+}
+
+body.dark-theme .about-cta-content .btn-outline:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #E8E8F0;
+}
+
+body.dark-theme .about-wave svg path {
+    fill: #0F0F1A;
+}
+
+/* Адаптивность */
+@media (max-width: 992px) {
+    .about-hero-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .about-hero-text p {
+        margin: 0 auto 24px;
+    }
+
+    .about-hero-buttons {
+        justify-content: center;
+    }
+
+    .about-float-cards {
+        justify-content: center;
+    }
+
+    .about-mission-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .about-goals-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .about-hero {
+        padding: 40px 0 30px;
+    }
+
+    .about-hero-text h1 {
+        font-size: 28px;
+    }
+
+    .about-hero-text p {
+        font-size: 16px;
+    }
+
+    .about-section {
+        padding: 48px 0;
+    }
+
+    .about-section-header h2 {
+        font-size: 28px;
+    }
+
+    .about-timeline {
+        padding-left: 24px;
+    }
+
+    .about-timeline::before {
+        left: 8px;
+    }
+
+    .timeline-icon {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+        font-size: 16px;
+    }
+
+    .timeline-content {
+        padding: 16px;
+    }
+
+    .about-mission-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .about-float-cards .float-card {
+        width: 60px;
+        height: 60px;
+        font-size: 24px;
+    }
+
+    .about-cta {
+        padding: 48px 0;
+    }
+
+    .about-cta-content h2 {
+        font-size: 28px;
+    }
+}
+</style>
+{% endblock %}

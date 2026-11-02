@@ -1,0 +1,360 @@
+{% extends "base.html" %}
+
+{% block title %}Помощь{% endblock %}
+
+{% block content %}
+<div class="help-page">
+    <div class="chat-container">
+        <!-- Заголовок чата -->
+        <div class="chat-header">
+            <div class="bot-avatar">🤖</div>
+            <div>
+                <h2>Кузька</h2>
+                <span class="online-status">● Онлайн</span>
+            </div>
+        </div>
+
+        <!-- Окно сообщений -->
+        <div class="chat-window" id="chatWindow">
+            <!-- Приветствие -->
+            <div class="message bot-message">
+                <div class="message-avatar">🤖</div>
+                <div class="message-content">
+                    <p>Привет! Я Кузька — ваш помощник по платформе. Я могу рассказать, как тут всё устроено, или помочь с основами HTML и CSS. Выберите интересующий вас вопрос:</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-input-area">
+            <div class="quick-questions" id="quickQuestions">
+                <button onclick="botAnswer('platform')">🎓 Как проходит обучение?</button>
+                <button onclick="botAnswer('find')">🧭 Что где находится?</button>
+                <button onclick="botAnswer('html')">📄 Что такое HTML?</button>
+                <button onclick="botAnswer('css')">🎨 Что такое CSS?</button>
+                <button onclick="botAnswer('js')">⚡ Что такое JavaScript?</button>
+                <button onclick="botAnswer('practice')">💻 Как решать задания?</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // БАЗА ЗНАНИЙ КУЗЬКИ 
+    const botKnowledge = {
+        'platform': {
+            title: 'Как проходит обучение?',
+            answer: `Обучение строится по принципу "Теория → Практика". 
+<br><br>
+<strong>1. Выберите сложность.</strong> На главной странице есть три блока: 🟢 Лёгкие, 🟡 Средние и 🔴 Сложные задания. 
+<br><br>
+<strong>2. Изучите теорию.</strong> Перед каждым блоком заданий вы переходите на страницу с теорией, где я (и мои коллеги) максимально просто объясняем основы. 
+<br><br>
+<strong>3. Переходите к практике.</strong> Вы открываете редактор кода и выполняете задание. Код проверяется автоматически, и вы сразу видите результат. 
+<br><br>
+<strong>4. Следите за прогрессом.</strong> Слева в меню есть вкладка "Рейтинг" — там вы видите свои баллы и место среди других учеников.`
+        },
+        'find': {
+            title: 'Что где находится?',
+            answer: `Вот краткая карта платформы:
+<br><br>
+🏠 <strong>Главная</strong> — все задания, разделенные по сложности.
+<br>
+👥 <strong>Друзья</strong> — ищите других учеников и добавляйте их в друзья.
+<br>
+✉️ <strong>Личные сообщения</strong> — общайтесь с друзьями.
+<br>
+🏆 <strong>Рейтинг</strong> — список лучших учеников по баллам.
+<br>
+⚙️ <strong>Настройки</strong> (шестеренка в правом верхнем углу) — здесь можно изменить тему (светлая/тёмная) или выйти из системы.
+<br>
+💬 <strong>Обсуждения</strong> — место для общих вопросов.
+<br><br>
+Все эти разделы доступны через боковое меню (нажмите на ☰ в верхнем левом углу).`
+        },
+        'html': {
+            title: 'Что такое HTML?',
+            answer: `<strong>HTML (HyperText Markup Language)</strong> — это язык разметки. Он отвечает за <em>структуру</em> веб-страницы: где будет заголовок, где абзац, а где картинка.
+<br><br>
+Все элементы пишутся в угловых скобках:
+<br>
+📌 <code>&lt;h1&gt;</code> — заголовок
+<br>
+📌 <code>&lt;p&gt;</code> — параграф
+<br>
+📌 <code>&lt;div&gt;</code> — блок
+<br>
+📌 <code>&lt;table&gt;</code>, <code>&lt;tr&gt;</code>, <code>&lt;td&gt;</code> — таблицы
+<br>
+📌 <code>&lt;ul&gt;</code>, <code>&lt;li&gt;</code> — списки
+<br><br>
+<strong>Запомните:</strong> почти каждый тег нужно закрывать! Например: <code>&lt;p&gt;Текст&lt;/p&gt;</code>`
+        },
+        'css': {
+            title: 'Что такое CSS?',
+            answer: `<strong>CSS (Cascading Style Sheets)</strong> — это язык стилей. Он отвечает за <em>внешний вид</em>: цвет, размер шрифта, отступы, расположение.
+<br><br>
+CSS подключается внутри тега <code>&lt;style&gt;</code> в <code>&lt;head&gt;</code> или в отдельном файле.
+<br><br>
+📌 <code>color</code> — цвет текста
+<br>
+📌 <code>background</code> — фон элемента
+<br>
+📌 <code>font-size</code> — размер шрифта
+<br>
+📌 <code>display: flex</code> — гибкое расположение элементов (например, в ряд)
+<br>
+📌 <code>justify-content: space-around</code> — распределение элементов по контейнеру
+<br><br>
+<strong>Запомните:</strong> стили пишутся в фигурных скобках. Например: <code>h1 { color: blue; }</code>`
+        },
+        'js': {
+            title: 'Что такое JavaScript?',
+            answer: `<strong>JavaScript (JS)</strong> — это язык программирования, который делает страницу <em>живой</em>. Он отвечает за интерактивность: клики, анимации, отправку данных.
+<br><br>
+Например, когда вы нажимаете кнопку, и что-то происходит — это работа JavaScript.
+<br><br>
+📌 Он подключается внутри тега <code>&lt;script&gt;</code> или в отдельном файле.
+<br>
+📌 Переменные: <code>let x = 5;</code>
+<br>
+📌 Функции: <code>function hello() { alert('Привет!'); }</code>
+<br><br>
+<strong>На нашей платформе</strong> вы изучаете основы HTML и CSS, но если захотите — сможете перейти к изучению JS в будущем!`
+        },
+        'practice': {
+            title: 'Как решать задания?',
+            answer: `Чтобы решить задание, выполните несколько шагов:
+<br><br>
+<strong>1.</strong> Откройте задание на главной странице.
+<br>
+<strong>2.</strong> В окне редактора (слева) напишите код согласно условию.
+<br>
+<strong>3.</strong> Нажмите кнопку <strong>"▶ Запустить"</strong>, чтобы увидеть результат.
+<br>
+<strong>4.</strong> Если всё выглядит правильно, нажмите <strong>"📤 Отправить"</strong>.
+<br><br>
+✔️ Если задание выполнено верно, вы получите баллы, которые попадут в ваш рейтинг.
+<br>
+❌ Если есть ошибки, платформа покажет подсказку. Не бойтесь пробовать снова!`
+        }
+    };
+
+    function addBotMessage(html) {
+        const chatWindow = document.getElementById('chatWindow');
+        const msgDiv = document.createElement('div');
+        msgDiv.className = 'message bot-message';
+        msgDiv.innerHTML = `
+            <div class="message-avatar">🤖</div>
+            <div class="message-content">
+                <p>${html}</p>
+            </div>
+        `;
+        chatWindow.appendChild(msgDiv);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    function botAnswer(topicKey) {
+        const topic = botKnowledge[topicKey];
+        if (!topic) return;
+
+        // Добавляем сообщение пользователя
+        const chatWindow = document.getElementById('chatWindow');
+        const userMsg = document.createElement('div');
+        userMsg.className = 'message user-message';
+        userMsg.innerHTML = `
+            <div class="message-content">
+                <p>${topic.title}</p>
+            </div>
+        `;
+        chatWindow.appendChild(userMsg);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+
+        setTimeout(() => {
+            addBotMessage(topic.answer);
+        }, 600);
+    }
+</script>
+
+<style>
+    .help-page {
+        max-width: 700px;
+        margin: 50px auto;
+        padding: 0 20px;
+    }
+
+    .chat-container {
+        background: white;
+        border-radius: 24px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+    }
+
+    .chat-header {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 20px;
+        background: linear-gradient(135deg, #EEF2FF, #E0E7FF);
+        border-bottom: 1px solid #E5E7EB;
+    }
+
+    .bot-avatar {
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, #6366F1, #8B5CF6);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+    }
+
+    .chat-header h2 {
+        margin: 0;
+        font-size: 18px;
+        color: #111827;
+    }
+
+    .online-status {
+        font-size: 12px;
+        color: #10B981;
+        font-weight: 600;
+    }
+
+    .chat-window {
+        min-height: 400px;
+        max-height: 500px;
+        overflow-y: auto;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .message {
+        display: flex;
+        gap: 10px;
+        max-width: 85%;
+    }
+
+    .bot-message {
+        align-self: flex-start;
+    }
+
+    .message-avatar {
+        width: 32px;
+        height: 32px;
+        background: #EEF2FF;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        flex-shrink: 0;
+    }
+
+    .message-content {
+        background: #F3F4F6;
+        border-radius: 16px;
+        padding: 14px;
+        font-size: 14px;
+        line-height: 1.6;
+        color: #374151;
+    }
+
+    .message-content code {
+        background: #E5E7EB;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 13px;
+        color: #111827;
+    }
+
+    .user-message {
+        align-self: flex-end;
+    }
+
+    .user-message .message-content {
+        background: #6366F1;
+        color: white;
+        border-radius: 16px;
+    }
+
+    .chat-input-area {
+        padding: 16px;
+        border-top: 1px solid #E5E7EB;
+        background: #F9FAFB;
+    }
+
+    .quick-questions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .quick-questions button {
+        background: white;
+        border: 1px solid #E5E7EB;
+        border-radius: 20px;
+        padding: 10px 16px;
+        font-size: 13px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-family: inherit;
+        color: #374151;
+    }
+
+    .quick-questions button:hover {
+        border-color: #6366F1;
+        color: #6366F1;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
+    }
+
+    /* Тёмная тема */
+    body.dark-theme .chat-container {
+        background: #1E1E32;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    body.dark-theme .chat-header {
+        background: rgba(99, 102, 241, 0.1);
+        border-bottom-color: #333355;
+    }
+
+    body.dark-theme .chat-header h2 {
+        color: #E8E8F0;
+    }
+
+    body.dark-theme .message-content {
+        background: #2A2A42;
+        color: #A0A0B8;
+    }
+
+    body.dark-theme .message-content code {
+        background: #111827;
+        color: #E8E8F0;
+    }
+
+    body.dark-theme .user-message .message-content {
+        background: #6366F1;
+        color: white;
+    }
+
+    body.dark-theme .chat-input-area {
+        background: #111827;
+        border-top-color: #333355;
+    }
+
+    body.dark-theme .quick-questions button {
+        background: #2A2A42;
+        border-color: #333355;
+        color: #A0A0B8;
+    }
+
+    body.dark-theme .quick-questions button:hover {
+        border-color: #818CF8;
+        color: #818CF8;
+    }
+</style>
+{% endblock %}
